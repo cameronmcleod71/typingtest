@@ -16,9 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
-app_name= "specialchartest"
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include("specialchartest.urls")),
+    path('api', include("typer_api.urls")),
+    path('', include("frontend.urls")),
 ]
