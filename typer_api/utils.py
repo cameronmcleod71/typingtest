@@ -13,7 +13,7 @@ class SpecialTypingTest:
         return next_char
     
     def generate_test(self):
-        for i in range(20):
+        for i in range(1000):
             test_char = self.get_next_char()
             self.special_char_test['test'].append(test_char)
         

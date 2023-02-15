@@ -4,12 +4,13 @@ import { Form } from 'react-router-dom'
 
 
 
-export default function SpecialCharTestInput() {
+export default function SpecialCharTestInput(props) {
+    // let formData = "";
     return (
         <Box maxW="480px">
             <Form>
                 <FormControl>
-                    <Input type="text" name="input" />
+                    <Input type="text" name="input"  onKeyPress={(e) => props.handleKeyPress(e)} />
                     <FormHelperText>Type here.</FormHelperText>
                 </FormControl>
             </Form>
