@@ -1,104 +1,111 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Container, Heading } from '@chakra-ui/react'
+import { Container, Heading, Text } from '@chakra-ui/react'
 import SpecialCharTestView from '../components/SpecialCharTestView'
 import SpecialCharTestInput from '../components/SpecialCharTestInput'
 import { exampleSpecialTest } from '../typingtest/specialchar'
-
-//TODO: make a length constant for the chars on a line
-//semi colons, clean code, comments
+import { startOptimizedAppearAnimation } from 'framer-motion'
 
 export default function SpecialCharTest() {
-    const [shownChars, setShownChars] = useState([]); //these are the characters that will appear in the bottom two rows
-    const [prevChars, setPrevChars] = useState([]); //this keaps track of the chars in the top row (the previously typed chars)
+    // State for the middle row of chars
+    const [shownChars, setShownChars] = useState([]);
+    // State for the top row of chars
+    const [prevChars, setPrevChars] = useState([]); 
+    // State for the bottom row of chars
     const [approachingChars, setApproachingChars] = useState([]);
-    //NOTE: might seperate the bottom two rows into seperate rows ( the exchange between rows would be alot cleaner
-
+    // State for the current time remaining
+    const [timeRemaining, setTimeRemaining] = useState([]);
+    // The remaining typing test (the chars that are not on the screen, but will appear on the screen when the test taker reaches them)
+    // this contains a list of objects {word: '&', value: 'x'}
+    // in this object, word holds the character, and value holds the clients answer for tha character
+    // value can be 'x' for wrong, 'o' for correct, '' or anything else for unanswered
     let typingTest = useRef([]);
+    // The current position in the line of chars/words (objects)
     let currentCharIndex = useRef(0);
     let testInitialized = useRef(false);
-    let input = "";
+    let timerInitialized = useRef(false);
+    // Keap track of the user's current input
+    let input = useRef("");
+    let intervalId = useRef(0);
+    // The length (or number of characters) on each of the three test lines
+    const lineLength = 10;
+    // The total duration time of a typing test in seconds
+    const testDuration = 60;  // *** this will change when we allow the user to choose a time
 
-    const lineLength = 10; //this is a constant to set the number of characters in each line
 
     useEffect(() => {
             fetch('/api/typingtest')
             .then((response) => 
-                response.json())  //Note for future me: when you have a function with one line, javascript will return whats on that one line
+                response.json()) 
             .then((data) => {
-                typingTest.current = data.test.map((char) => { 
-                    return {word:char,state:''};
+                typingTest.current = data.test.map((char) => {
+                    return {word:char,value:''};
                 });
                 initializeTest();      
-            });
-            
-            
-            
+            });       
         },
         []
     );
+
     useEffect(() => {
-        if (testInitialized.current) {
-            updateTestState();
-        }
+        if (testInitialized.current) updateTestState();
     },[shownChars]);
 
-
-    
-
     const handleKeyPress = (e) => {
-        if (!testInitialized.current){
-            testInitialized.current = true;
+        // allow the shown chars to begin updating again
+        if (!timerInitialized.current) {
+            timerInitialized.current = true;
+            startTimer();
         }
-        //need to update currentChar, shownChars, prevChars (prevChars and shownChars will only change once every 10 spaces
+        if (!testInitialized.current) testInitialized.current = true;
         if (e.key === " ") {
-            if (input === shownChars[currentCharIndex.current].word) {
-                // green text
-                console.log(shownChars[currentCharIndex.current]);
-
-                setShownChars(shownChars.map((obj,index) => {
-                    if (index === currentCharIndex.current) {
-                        return {...obj,state:'o'};
-                    } else {
-                        return obj;
-                    }
-                }));
-                    
-
-
+            if (input.current === shownChars[currentCharIndex.current].word) {
+                // green text (correct)
+                changeCharValue('o');
             } else {
-                // red text
-                setShownChars(shownChars.map((obj,index) => {
-                    if (index === currentCharIndex.current) {
-                        return {...obj,state:'x'};
-                    } else {
-                        return obj;                 // could be made into one function
-                    }
-                }));
-
-
+                // red text (wrong)
+                changeCharValue('x');
             }
             e.target.value = "";
-            
+            input.current = "";
         } else {
-            input = input + e.key;
+            input.current = input.current + e.key;
         }
-        
+    };
 
+    const handleKeyDown = (e) => {
+        if (e.key === "Backspace") input.current = input.current.slice(0,-1);
+    };
+
+    function startTimer() {
+        intervalId = setInterval(() => {
+            setTimeRemaining(prev => prev - 1);
+        }, 1000);
     }
 
+    // need to create an endtimer once timeRemaining === 0
+
+    // change the shown character at the current char index to 'x' or 'o' (wrong or right)
+    function changeCharValue(val) {
+        setShownChars(shownChars.map((obj,index) => {
+            if (index === currentCharIndex.current) {
+                return {...obj, value: val};
+            } else {
+                return obj;
+            }
+        }));
+    }
+
+    // set the state variables before we begin a test
     function initializeTest() {
-        //sets the currentChar and the shown chars
-        //grab the first 20 chars from typingTest
         setShownChars(typingTest.current.splice(0,lineLength));
         setApproachingChars(typingTest.current.splice(0,lineLength));
+        setTimeRemaining(testDuration);
     }
+
+    // update the state of the typing test every time the user presses space
     function updateTestState() {
-        // if keypress matches the current, current turns green, if not then red
-        // currentChar moves to next char in shown chars - shownChars is updated with color
-        // if count is 10, prevChars is updated with the next 10 chars of shown chars, shown chars grabs the next 10 chars from typingTest
         if (currentCharIndex.current === lineLength-1) {
             testInitialized.current = false;
-            // update prevshownchars, shown chars
             let tempShownChars = [...shownChars].map((obj) => {return obj});
             let tempApproachingChars = [...approachingChars].map((obj) => {return obj});
             setPrevChars(tempShownChars.splice(0,lineLength))
@@ -112,8 +119,9 @@ export default function SpecialCharTest() {
 
     return (
        <Container>
+            <Text>{timeRemaining}</Text>
             <SpecialCharTestView curChars={shownChars} prevChars={prevChars} approachingChars={approachingChars} />
-            <SpecialCharTestInput handleKeyPress={handleKeyPress}/>
+            <SpecialCharTestInput handleKeyPress={handleKeyPress} handleKeyDown={handleKeyDown} />
        </Container>
     );
 }

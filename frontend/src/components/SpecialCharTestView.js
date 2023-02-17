@@ -16,9 +16,9 @@ function TyperText(props) {
         <Box>
             <Text>
                     { props.testChars.map((obj) => {
-                        if (obj.state === "x"){
+                        if (obj.value === "x"){
                             return (<span style={{color:'red'}}>{obj.word + " "}</span>);
-                        } else if (obj.state === "o") {
+                        } else if (obj.value === "o") {
                             return (<span style={{color:'green'}}>{obj.word + " "}</span>);
                         } else {
                             return ( <span style={{color:'black'}}>{obj.word + " "}</span> );
