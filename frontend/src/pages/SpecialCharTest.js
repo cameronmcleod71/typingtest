@@ -4,6 +4,9 @@ import SpecialCharTestView from '../components/SpecialCharTestView'
 import SpecialCharTestInput from '../components/SpecialCharTestInput'
 import { exampleSpecialTest } from '../typingtest/specialchar'
 import { startOptimizedAppearAnimation } from 'framer-motion'
+import { Navigate } from 'react-router-dom'
+
+// BUG: pressing enter while writing makes your answer wrong
 
 export default function SpecialCharTest() {
     // State for the middle row of chars
@@ -14,6 +17,8 @@ export default function SpecialCharTest() {
     const [approachingChars, setApproachingChars] = useState([]);
     // State for the current time remaining
     const [timeRemaining, setTimeRemaining] = useState([]);
+    // Contains a list of all the answered questions to send to results
+    let completedEntries = useRef([]);
     // The remaining typing test (the chars that are not on the screen, but will appear on the screen when the test taker reaches them)
     // this contains a list of objects {word: '&', value: 'x'}
     // in this object, word holds the character, and value holds the clients answer for tha character
@@ -31,7 +36,7 @@ export default function SpecialCharTest() {
     // The total duration time of a typing test in seconds
     const testDuration = 60;  // *** this will change when we allow the user to choose a time
 
-
+   
     useEffect(() => {
             fetch('/api/typingtest')
             .then((response) => 
@@ -47,7 +52,10 @@ export default function SpecialCharTest() {
     );
 
     useEffect(() => {
-        if (testInitialized.current) updateTestState();
+        if (testInitialized.current) {
+            completedEntries.current.push({...shownChars[currentCharIndex.current]});
+            updateTestState();
+        }
     },[shownChars]);
 
     const handleKeyPress = (e) => {
@@ -72,15 +80,27 @@ export default function SpecialCharTest() {
         }
     };
 
+    // useEffect(() => {
+    //     if (timeRemaining === 0) {
+    //         endTimer();
+    //     }
+    // },[timeRemaining]);
+
     const handleKeyDown = (e) => {
         if (e.key === "Backspace") input.current = input.current.slice(0,-1);
     };
 
     function startTimer() {
-        intervalId = setInterval(() => {
+        intervalId.current = setInterval(() => {
             setTimeRemaining(prev => prev - 1);
         }, 1000);
     }
+
+    function endTimer() {
+        clearInterval(intervalId.current);
+        intervalId.current = 0;
+    }
+
 
     // need to create an endtimer once timeRemaining === 0
 
@@ -115,6 +135,11 @@ export default function SpecialCharTest() {
         } else {
             currentCharIndex.current++;
         }   
+    }
+
+    if (timeRemaining === 0) {
+        endTimer();
+        return (<Navigate to="/results" state={{completedEntries:completedEntries, type:'special', duration: testDuration}} />);
     }
 
     return (
