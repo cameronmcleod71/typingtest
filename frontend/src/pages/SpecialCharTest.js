@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Container, Heading, Text } from '@chakra-ui/react'
+import { Container, Heading, Text, VStack } from '@chakra-ui/react'
 import SpecialCharTestView from '../components/SpecialCharTestView'
 import SpecialCharTestInput from '../components/SpecialCharTestInput'
 import { exampleSpecialTest } from '../typingtest/specialchar'
@@ -144,9 +144,11 @@ export default function SpecialCharTest() {
 
     return (
        <Container>
-            <Text>{timeRemaining}</Text>
-            <SpecialCharTestView curChars={shownChars} prevChars={prevChars} approachingChars={approachingChars} />
-            <SpecialCharTestInput handleKeyPress={handleKeyPress} handleKeyDown={handleKeyDown} />
+            <VStack spacing="30px">
+                <Text fontSize="8xl" fontWeight="bold">{timeRemaining}</Text>
+                <SpecialCharTestView curChars={shownChars} prevChars={prevChars} approachingChars={approachingChars} />
+                <SpecialCharTestInput handleKeyPress={handleKeyPress} handleKeyDown={handleKeyDown} />
+            </VStack>
        </Container>
     );
 }

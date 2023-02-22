@@ -3,12 +3,16 @@ import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } 
 import RootLayout from './layouts/RootLayout'
 import SpecialCharTest from './pages/SpecialCharTest'
 import ResultsPage from './pages/ResultsPage'
+import Login from './pages/Login'
+import Register from './pages/Register'
 
 const router = createBrowserRouter(
     createRoutesFromElements(
-        <Route path='/' elements={<RootLayout />}>
+        <Route path='/' element={<RootLayout />}>
             <Route index element={<SpecialCharTest />} />
             <Route path="/results" element={ <ResultsPage />} />
+            <Route path='/login' element={ <Login />} />
+            <Route path='/register' element={ <Register />} />
         </Route>
     )
 )
