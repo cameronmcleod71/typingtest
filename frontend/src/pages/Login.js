@@ -1,13 +1,15 @@
 import { Box, Button, FormControl, Heading, Input, Text } from '@chakra-ui/react'
 import React, { useState } from 'react'
-import { Form, Link } from 'react-router-dom';
+import { Form, Link, Navigate } from 'react-router-dom';
 import Cookies from 'universal-cookie'
 import CSRFToken from '../components/CSRFToken'
+import { useSelector, useDispatch } from "react-redux"
+import { changeAuth } from '../redux/auth';
 
-function login(username, password) {
+async function login(username, password) {
     const cookies = new Cookies();
-
-    fetch('/api/login', {
+    let wasAuthSuccessful = false;
+    await fetch('/api/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -20,15 +22,19 @@ function login(username, password) {
         response.json())
     .then((data) => {
         console.log(data);
-        //SET THE isAuthenticated STATE here
+        if (data.success) wasAuthSuccessful = true;
     })
     .catch((err) => {
         console.log(err);
     });
+    return wasAuthSuccessful;
 }
 
 
 export default function Login() {
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+    const dispatch = useDispatch();
+
     const [formData, setFormData] = useState({
         username: '',
         password: ''
@@ -40,7 +46,11 @@ export default function Login() {
 
     const onSubmit = e => {
         e.preventDefault();
-        login(username, password);
+        login(username, password).then((authStatus) => dispatch(changeAuth(authStatus)));
+    }
+
+    if (isAuthenticated === true) {
+        return ( <Navigate to="/" /> );
     }
 
     return (

@@ -43,8 +43,8 @@ export default function SpecialCharTestView (props) {
 
 function TyperText(props) {
     return (
-        <Box p="5px" m="5px" bg="gray.200" borderRadius="md" required="true" >
-            <Text fontFamily="Iosevka" fontSize="4xl">
+        <Box p="5px"  my="10px" bg="gray.200" borderRadius="2xl" required="true">
+            <Text fontFamily="Iosevka" fontSize="4xl" mx="10px">
                 
                 {
                 props.testChars.length === 0 ? <pre style={{"font-family":"Iosevka"}}>                   </pre> :

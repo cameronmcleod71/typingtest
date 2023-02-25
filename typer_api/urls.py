@@ -3,8 +3,12 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('typingtest', views.SpecialCharTest.as_view()),
+    path('typingtest', views.GetSpecialCharTest.as_view()),
     path('login', views.LoginView.as_view()),
     path('csrf_token', views.GetCSRFToken.as_view()),
     path('register', views.SignupView.as_view()),
+    path('auth', views.CheckAuthenticatedView.as_view()),
+    path('logout', views.LogoutView.as_view()),
+    path('savespecialchar', views.SaveSpecialCharTest.as_view()),
+    path('getspecialchartest', views.GetPastSpecialCharTest.as_view())
 ]

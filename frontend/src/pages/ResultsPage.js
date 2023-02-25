@@ -1,6 +1,8 @@
 import React from 'react'
 import { Heading, Container, Text } from '@chakra-ui/react'
 import { useLocation } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import Cookies from 'universal-cookie'
 
 // Returns the Chars per minute
 // Takes an array of objects corresponding to the test
@@ -26,11 +28,13 @@ function calculateAccuracy(testResults) {
 }
 
 export default function ResultsPage() {
-
     const { state } = useLocation();
     const testResults = state.completedEntries.current;
     const testType = state.type;
     const testDuration = state.duration;
+
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+    const cookies = new Cookies();
 
     const calculatedResults = {
         wmp: 0,
@@ -40,7 +44,32 @@ export default function ResultsPage() {
 
     if (testType === 'special') calculatedResults.cpm = calculateCPM(testResults);
     calculatedResults.accuracy = calculateAccuracy(testResults);
+    const testPackage = {'test':testResults, 'duration': testDuration, 'results': calculatedResults};
+    if (isAuthenticated) {
+        try {
+            fetch('api/savespecialchar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': cookies.get('csrftoken'),
+                },
+                body: JSON.stringify(testPackage),
+            })
+            .then((response) =>
+                response.json())
+            .then((data) => {
+                console.log(data);
+            })
+            .catch((err) =>
+                console.log(err)
+            );
+        
+        } catch {
 
+        }
+    }
+
+    console.log(JSON.stringify({testPackage}));
     return (
         <Container>
             <Heading>Your Results</Heading>

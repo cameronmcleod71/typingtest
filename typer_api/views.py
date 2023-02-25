@@ -10,6 +10,25 @@ from rest_framework import permissions
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.utils.decorators import method_decorator
+import json
+from .serializers import SpecialCharTestSerializer
+from .models import SpecialCharTest
+
+class CheckAuthenticatedView(APIView):
+    def get(self, request, format=None):
+        user = self.request.user
+
+        try:
+            isAuthenticated = user.is_authenticated
+            response_data = {}
+            if isAuthenticated:
+                response_data['isAuthenticated'] = 'success'
+                response_data['username'] = user.username
+                return Response(response_data)
+            else:
+                return Response({ 'isAuthenticated': 'error' })
+        except:
+            return Response({ 'error': 'Something went wrong when checking authentication status' })
 
 
 # Create your views here.
@@ -17,7 +36,7 @@ def index(requests):
     return HttpResponse("Hello from the api")
 
 
-class SpecialCharTest(APIView):
+class GetSpecialCharTest(APIView):
     permission_classes = (permissions.AllowAny, )
 
     def get(self, requests, format=None):
@@ -52,7 +71,8 @@ class SignupView(APIView):
                     return Response({ 'success': 'User created successfully' })
         except:
                 return Response({ 'error': 'Something went wrong when registering account' })
-
+        
+@method_decorator(csrf_protect, name='dispatch')
 class LogoutView(APIView):
     def post(self, request, format=None):
         try:
@@ -100,3 +120,46 @@ class DeleteAccountView(APIView):
             return Response({ 'success': 'User deleted successfully' })
         except:
             return Response({ 'error': 'Something went wrong when trying to delete user' })
+
+@method_decorator(csrf_protect, name='dispatch')
+class SaveSpecialCharTest(APIView):
+    def post(self, request, format=None):
+        data = self.request.data
+        user = self.request.user
+
+        data['owner'] = user.id # might not be a good practice to edit the request itself
+        print(data)
+        data['results'] = json.dumps(data['results'])
+        for a in data['test']:
+            a = json.dumps(a)
+        data['test'] = json.dumps(data['test'])
+
+        serializer = SpecialCharTestSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'success': 'Test saved'})
+        print(serializer.errors)
+        return Response({'error': 'Test not valid'})
+    
+class GetPastSpecialCharTest(APIView):
+    def get(self,request, format=None):
+        try:
+
+            user = self.request.user
+            tests = SpecialCharTest.objects.filter(owner=user.id)
+            serializer = SpecialCharTestSerializer(tests, many=True) # may be a bug because there may not always be many
+            # print(json.dumps(tests))
+            return Response({'success': serializer.data})
+        except:
+            return Response({'error': 'Something went wrong completing your request'})
+
+
+
+
+
+
+
+
+        
+        
+        
