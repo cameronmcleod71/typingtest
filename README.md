@@ -10,6 +10,7 @@ React was used because its state management allow for easy access and manipulati
 
 ### Planned Future Updates
 
+- Deployment
 - Programming Typing Test
 - History graph that can show a users progress over a scale of previous singular tests, daily basis, weekly basis, and monthly basis.
 
