@@ -6,11 +6,9 @@ import store from './redux/store'
 import { Provider } from 'react-redux';
 
 ReactDOM.createRoot(document.getElementById('app')).render(
-  //  <React>
         <ChakraProvider>
             <Provider store={store}>
                 <App />
             </Provider>
         </ChakraProvider>
- //   </React>
 )

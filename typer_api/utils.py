@@ -23,15 +23,5 @@ class SpecialTypingTest:
 
 
 
-test = SpecialTypingTest()
-
-test.generate_test()
-
-
-print(print(test.get_test()))
-
-
-
-
 
     

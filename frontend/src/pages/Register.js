@@ -1,33 +1,8 @@
 import { Box, FormControl, Heading, Input } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { Form } from 'react-router-dom';
-import Cookies from 'universal-cookie'
 import CSRFToken from '../components/CSRFToken'
-
-function register(username, password) {
-    const cookies = new Cookies();
-
-    fetch('/api/register', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'X-CSRFToken': cookies.get('csrftoken'),
-        },
-        //credentials: 'same-orgin',
-        body: JSON.stringify({username, password}),
-    })
-    .then((response) =>
-        response.json())
-    .then((data) => {
-        console.log(data);
-        //SET THE isAuthenticated STATE here
-    })
-    .catch((err) => {
-        console.log(err);
-    });
-}
-
+import { register } from '../utils/auth'
 
 export default function Register() {
     const [formData, setFormData] = useState({

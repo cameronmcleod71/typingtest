@@ -7,11 +7,6 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = '__all__'
 
-# class UserProfileSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = UserProfile
-
-
 class SpecialCharTestSerializer(serializers.ModelSerializer):
     class Meta:
         model = SpecialCharTest

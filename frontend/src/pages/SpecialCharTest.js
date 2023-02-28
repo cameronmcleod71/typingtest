@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from 'react'
 import { Container, Heading, Text, VStack } from '@chakra-ui/react'
 import SpecialCharTestView from '../components/SpecialCharTestView'
 import SpecialCharTestInput from '../components/SpecialCharTestInput'
-import { exampleSpecialTest } from '../typingtest/specialchar'
 import { startOptimizedAppearAnimation } from 'framer-motion'
 import { Navigate } from 'react-router-dom'
 
@@ -80,12 +79,6 @@ export default function SpecialCharTest() {
         }
     };
 
-    // useEffect(() => {
-    //     if (timeRemaining === 0) {
-    //         endTimer();
-    //     }
-    // },[timeRemaining]);
-
     const handleKeyDown = (e) => {
         if (e.key === "Backspace") input.current = input.current.slice(0,-1);
     };
@@ -100,7 +93,6 @@ export default function SpecialCharTest() {
         clearInterval(intervalId.current);
         intervalId.current = 0;
     }
-
 
     // need to create an endtimer once timeRemaining === 0
 

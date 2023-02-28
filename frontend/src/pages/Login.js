@@ -1,35 +1,10 @@
 import { Box, Button, FormControl, Heading, Input, Text } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { Form, Link, Navigate } from 'react-router-dom';
-import Cookies from 'universal-cookie'
 import CSRFToken from '../components/CSRFToken'
 import { useSelector, useDispatch } from "react-redux"
 import { changeAuth } from '../redux/auth';
-
-async function login(username, password) {
-    const cookies = new Cookies();
-    let wasAuthSuccessful = false;
-    await fetch('/api/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': cookies.get('csrftoken'),
-        },
-        // credentials: 'same-orgin',
-        body: JSON.stringify({username, password}),
-    })
-    .then((response) =>
-        response.json())
-    .then((data) => {
-        console.log(data);
-        if (data.success) wasAuthSuccessful = true;
-    })
-    .catch((err) => {
-        console.log(err);
-    });
-    return wasAuthSuccessful;
-}
-
+import { login } from '../utils/auth';
 
 export default function Login() {
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);

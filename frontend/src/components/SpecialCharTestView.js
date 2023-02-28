@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Flex, Heading, HStack, Select, Spacer, Text, VStack } from '@chakra-ui/react'
 
-export default function SpecialCharTestView (props) {
+export default function SpecialCharTestView(props) {
 
     const noCopyCSS = {
         'user-Select': 'none',
@@ -9,35 +9,20 @@ export default function SpecialCharTestView (props) {
     };
     return (
         <Box fontSize="2xl" fontFamily="Iosevka" sx={noCopyCSS}>
-            {/* <HStack>
-                <VStack>
-                    <Text whiteSpace="pre">Prev: </Text>
-                    <Text whiteSpace="pre">Curr: </Text>
-                    <Text whiteSpace="pre">Next: </Text>
-                </VStack>
-                <VStack>
-                    <TyperText testChars={props.prevChars} />
-                    <TyperText testChars={props.curChars} />
-                    <TyperText testChars={props.approachingChars} />
-                </VStack>
-                <pre >      </pre>  
-            </HStack> */}
-            <Flex justifyContent="center" alignItems="center">
-                <Text flex={1}>Prev: </Text>
-                <TyperText testChars={props.prevChars} />
-                <Spacer w="200px" flex={1} />
-            </Flex>
-            <Flex justifyContent="center" alignItems="center">
-                <Text flex={1}>Curr: </Text>
-                <TyperText testChars={props.curChars} />
-                <Spacer w="200px" flex={1} />
-            </Flex>
-            <Flex justifyContent="center" alignItems="center">
-                <Text flex={1}>Next: </Text>
-                <TyperText testChars={props.approachingChars} />
-                <Spacer w="200px" flex={1} />
-            </Flex>
+            <TyperTextContainer testChars={props.prevChars} text="Prev: " />
+            <TyperTextContainer testChars={props.curChars} text="Curr: " />
+            <TyperTextContainer testChars={props.approachingChars} text="Next: " />
         </Box>
+    )
+}
+
+function TyperTextContainer(props) {
+    return (
+        <Flex justifyContent="center" alignItems="center">
+            <Text flex={1}>{props.text}</Text>
+            <TyperText lineChars={props.testChars} />
+            <Spacer w="200px" flex={1} />
+        </Flex>
     )
 }
 
@@ -47,8 +32,8 @@ function TyperText(props) {
             <Text fontFamily="Iosevka" fontSize="4xl" mx="10px">
                 
                 {
-                props.testChars.length === 0 ? <pre style={{"font-family":"Iosevka"}}>                   </pre> :
-                    props.testChars.map((obj) => {
+                props.lineChars.length === 0 ? <pre style={{"font-family":"Iosevka"}}>                   </pre> :
+                    props.lineChars.map((obj) => {
                         if (obj.value === "x"){
                             return (<span style={{color:'red'}}>{obj.word + " "}</span>);
                         } else if (obj.value === "o") {
