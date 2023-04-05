@@ -1,3 +1,4 @@
+import { Box, Divider } from '@chakra-ui/react';
 import React, { useEffect } from 'react'
 import { Outlet } from "react-router-dom"
 import Navbar from '../components/Navbar'
@@ -10,9 +11,12 @@ export default function RootLayout() {
     }
 
     return (
-        <div>
+
+        <Box bg="#1F2430" fontFamily="Iosevka">
             <Navbar />
+            <Divider borderColor="#1F2430"/>
             <Outlet />
-        </div>
+        </Box>
+
     )
 }

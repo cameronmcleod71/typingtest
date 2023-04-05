@@ -6,15 +6,23 @@ import ResultsPage from './pages/ResultsPage'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import PastResults from './pages/PastResults'
+import Profile from './pages/Profile'
+import ProgrammingTTest from './pages/ProgrammingTTest'
+import PrivateRoutes from './components/routes/PrivateRoutes'
+
 
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route path='/' element={<RootLayout />}>
             <Route index element={<SpecialCharTest />} />
+            <Route path="/programmer" element={<ProgrammingTTest />} />
             <Route path="/results" element={ <ResultsPage />} />
             <Route path='/login' element={ <Login />} />
             <Route path='/register' element={ <Register />} />
-            <Route path='/pastresults' element={ <PastResults />} />
+            <Route element={ <PrivateRoutes /> }>
+                <Route path='/pastresults' element={ <PastResults />} />
+                <Route path='/myaccount' element={ <Profile />} />
+            </Route>
         </Route>
     )
 )

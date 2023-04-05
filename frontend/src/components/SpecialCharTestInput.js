@@ -10,7 +10,7 @@ export default function SpecialCharTestInput(props) {
         <Box maxW="480px">
             <Form autoComplete='off'>
                 <FormControl textAlign='center'>
-                    <Input type="text" name="input"  onKeyPress={(e) => props.handleKeyPress(e)} onKeyDown={(e) => props.handleKeyDown(e)}/>
+                    <Input type="text" name="input" color="#abb2bf"  onKeyPress={(e) => props.handleKeyPress(e)} onKeyDown={(e) => props.handleKeyDown(e)}/>
                     <FormHelperText>Type here.</FormHelperText>
                 </FormControl>
             </Form>

@@ -20,7 +20,7 @@ export default function Register() {
     }
 
     return (
-        <Box>
+        <Box color="#abb2bf" >
             <Heading>Register</Heading>
             <Box>
                 <Form onSubmit={e => onSubmit(e)}>

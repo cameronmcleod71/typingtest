@@ -2,6 +2,7 @@ import Cookies from 'universal-cookie'
 import { useDispatch } from "react-redux"
 import { changeAuth } from '../redux/auth'
 import { setUsername } from '../redux/user'
+import { Link } from 'react-router-dom';
 
 export async function getAuth() {
     const dispatch = useDispatch();
@@ -87,7 +88,6 @@ export function signOut() {
         body: JSON.stringify({'withCredentials': true}),
     })
     .then((response) => {
-        console.log(response);
         response.json()})
     .then((data) => {
         console.log(data);
@@ -95,5 +95,27 @@ export function signOut() {
     })
     .catch((err) =>
         console.log(err)
+    );
+}
+
+export function deleteAccount() {
+    const cookies = new Cookies();
+    fetch('/api/deleteaccount', {
+        method: "DELETE",
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': cookies.get('csrftoken')
+        },
+        body: JSON.stringify({'withCredentials': true}),
+    })
+    .then((response) => 
+        response.json())
+    .then((data) => {
+        console.log(data);
+        //need to send user to '/'
+        
+    })
+    .catch((err) =>
+    console.log(err)
     );
 }

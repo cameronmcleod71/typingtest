@@ -1,6 +1,6 @@
 import { Box, Button, FormControl, Heading, Input, Text } from '@chakra-ui/react'
 import React, { useState } from 'react'
-import { Form, Link, Navigate } from 'react-router-dom';
+import { Form, Link, Navigate, useNavigate } from 'react-router-dom';
 import CSRFToken from '../components/CSRFToken'
 import { useSelector, useDispatch } from "react-redux"
 import { changeAuth } from '../redux/auth';
@@ -9,6 +9,7 @@ import { login } from '../utils/auth';
 export default function Login() {
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         username: '',
@@ -25,11 +26,13 @@ export default function Login() {
     }
 
     if (isAuthenticated === true) {
-        return ( <Navigate to="/" /> );
+        navigate("/");
+        window.location.reload();
+        
     }
 
     return (
-        <Box>
+        <Box color="#abb2bf">
             <Heading>Sign In</Heading>
             <Box>
                 <Form onSubmit={e => onSubmit(e)}>

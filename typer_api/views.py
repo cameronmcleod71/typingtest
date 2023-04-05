@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .utils import SpecialTypingTest
+from .utils import example_programming_typing_test
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from rest_framework.views import APIView
 from rest_framework import permissions
@@ -43,6 +44,15 @@ class GetSpecialCharTest(APIView):
         new_test = SpecialTypingTest()
         new_test.generate_test()
         return Response(new_test.get_test(), status=status.HTTP_200_OK)
+
+class GetProgrammingTTest(APIView):
+    permission_classes = (permissions.AllowAny, )
+
+    def get(self, requests, format=None):
+        new_test = example_programming_typing_test()
+        print(new_test)
+        return Response(new_test, status=status.HTTP_200_OK)
+        
     
 
 @method_decorator(csrf_protect, name='dispatch')

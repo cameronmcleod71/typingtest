@@ -16,7 +16,7 @@ export default function PastResults() {
     console.log(results);
 
     return (
-        <Container>
+        <Container color="#abb2bf" h="100vh" bg="#1F2430" >
             <Heading>Past Results</Heading>
             { 
             results.map((item,index) => {

@@ -3,6 +3,8 @@ from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import User
 
+
+
 # Create your models here.
 
 
@@ -12,5 +14,35 @@ class SpecialCharTest(models.Model):
     test = models.JSONField(models.JSONField())
     results = models.JSONField()
     duration = models.IntegerField(default=0) # stored in seconds
+
+class ProgrammerTypingTest(models.Model):
+    PYTHON = 'python'
+    JAVASCRIPT = 'javascript'
+    JAVA = 'java'
+    CHOICES = [
+        (PYTHON, 'Python'),
+        (JAVASCRIPT, 'JavaScript'),
+        (JAVA, 'Java'),
+    ]
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='programming_test')
+    language = models.CharField(max_length=50, choices=CHOICES)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    test = models.JSONField(models.JSONField())
+    results = models.JSONField()
+    duration = models.IntegerField(default=0)
+
+
+class PythonScript(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    script = models.JSONField(models.JSONField())
+
+class JavascriptScript(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    script = models.JSONField(models.JSONField())
+
+class JavaScript(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    script = models.JSONField(models.JSONField())
+
 
 

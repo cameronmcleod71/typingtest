@@ -1,37 +1,48 @@
-import React, { useEffect, useState, useRef } from 'react'
-import { Container, Heading, Text, VStack } from '@chakra-ui/react'
+import React, { useEffect, useState, useRef, useMemo } from 'react'
+import { Container, Heading, Text, VStack, Grid, GridItem, Box, Divider, Spacer, HStack } from '@chakra-ui/react'
 import SpecialCharTestView from '../components/SpecialCharTestView'
 import SpecialCharTestInput from '../components/SpecialCharTestInput'
-import { startOptimizedAppearAnimation } from 'framer-motion'
+import TestNavbar from '../components/TestNavbar'
 import { Navigate } from 'react-router-dom'
+import { useSelector, useDispatch } from "react-redux"
+import { testStarted, testCompleted, testReset } from '../redux/testStatus'
 
-// BUG: pressing enter while writing makes your answer wrong
 
+// bug to fix: pressing enter during test
 export default function SpecialCharTest() {
-    // State for the middle row of chars
-    const [shownChars, setShownChars] = useState([]);
-    // State for the top row of chars
-    const [prevChars, setPrevChars] = useState([]); 
-    // State for the bottom row of chars
-    const [approachingChars, setApproachingChars] = useState([]);
-    // State for the current time remaining
-    const [timeRemaining, setTimeRemaining] = useState([]);
-    // Contains a list of all the answered questions to send to results
+    const dispatch = useDispatch();
+    const isCompleted = useSelector((state) => state.testStatus.isCompleted);
+
+    // The number of lines of text on the screen
+    const lineCount = 5;
+
+    // The current line the user is typing on
+    let curLine = useRef(1);
+
+    let newLines = useRef(1);
+
+    // The test state that is on the screen
+    const [ testText, setTestText ] = useState({});
+
+    // Letters that have been complete
     let completedEntries = useRef([]);
-    // The remaining typing test (the chars that are not on the screen, but will appear on the screen when the test taker reaches them)
-    // this contains a list of objects {word: '&', value: 'x'}
-    // in this object, word holds the character, and value holds the clients answer for tha character
-    // value can be 'x' for wrong, 'o' for correct, '' or anything else for unanswered
+
+    // The entire remaining typing test that has not been added to the typing test state
     let typingTest = useRef([]);
+
     // The current position in the line of chars/words (objects)
-    let currentCharIndex = useRef(0);
+    let curIndex = useRef(0);
+
     let testInitialized = useRef(false);
+
     let timerInitialized = useRef(false);
+
     // Keap track of the user's current input
     let input = useRef("");
-    let intervalId = useRef(0);
+
     // The length (or number of characters) on each of the three test lines
-    const lineLength = 10;
+    const lineLength = 15;
+    
     // The total duration time of a typing test in seconds
     const testDuration = 60;  // *** this will change when we allow the user to choose a time
 
@@ -41,31 +52,39 @@ export default function SpecialCharTest() {
             .then((response) => 
                 response.json()) 
             .then((data) => {
+                console.log(data);
                 typingTest.current = data.test.map((char) => {
                     return {word:char,value:''};
                 });
                 initializeTest();      
-            });       
+            });   
+            // dispatch(testStarted(false));
+            // disptach(testCompleted(false));    
+            return () => {
+                // setInterval cleared when component unmounts
+                dispatch(testReset(false));
+              }
         },
         []
     );
 
-    useEffect(() => {
+
+    useMemo(() => {
         if (testInitialized.current) {
-            completedEntries.current.push({...shownChars[currentCharIndex.current]});
+            completedEntries.current.push({...testText[curLine.current.toString()][curIndex.current]});
             updateTestState();
         }
-    },[shownChars]);
+    },[testText]);
 
     const handleKeyPress = (e) => {
         // allow the shown chars to begin updating again
         if (!timerInitialized.current) {
             timerInitialized.current = true;
-            startTimer();
+            dispatch(testStarted(true));
         }
         if (!testInitialized.current) testInitialized.current = true;
         if (e.key === " ") {
-            if (input.current === shownChars[currentCharIndex.current].word) {
+            if (input.current === testText[curLine.current.toString()][curIndex.current].word) {
                 // green text (correct)
                 changeCharValue('o');
             } else {
@@ -83,65 +102,81 @@ export default function SpecialCharTest() {
         if (e.key === "Backspace") input.current = input.current.slice(0,-1);
     };
 
-    function startTimer() {
-        intervalId.current = setInterval(() => {
-            setTimeRemaining(prev => prev - 1);
-        }, 1000);
-    }
-
-    function endTimer() {
-        clearInterval(intervalId.current);
-        intervalId.current = 0;
-    }
-
     // need to create an endtimer once timeRemaining === 0
 
     // change the shown character at the current char index to 'x' or 'o' (wrong or right)
     function changeCharValue(val) {
-        setShownChars(shownChars.map((obj,index) => {
-            if (index === currentCharIndex.current) {
-                return {...obj, value: val};
+        setTestText(Object.fromEntries(Object.keys(testText).map((key,index) => {
+            if (parseInt(key) === curLine.current) {
+                return ([ 
+                    key, testText[key].map((obj, index) => {
+                        if (index === curIndex.current) {
+                            return {...obj, value: val}
+                        } else {
+                            return obj;
+                        }
+                    })
+                ]);
             } else {
-                return obj;
+                return [key, [...testText[key]].map((obj) => {return obj})]
             }
-        }));
+        })));
+        // curIndex.current++;
+
     }
 
-    // set the state variables before we begin a test
     function initializeTest() {
-        setShownChars(typingTest.current.splice(0,lineLength));
-        setApproachingChars(typingTest.current.splice(0,lineLength));
-        setTimeRemaining(testDuration);
+        let newTestObj = {}
+        for (let i=1; i<=lineCount; i++){
+            newTestObj[i.toString()] = typingTest.current.splice(0,lineLength)
+        }
+        setTestText(newTestObj);
     }
 
-    // update the state of the typing test every time the user presses space
     function updateTestState() {
-        if (currentCharIndex.current === lineLength-1) {
+        if (curIndex.current === lineLength-1 && curLine.current === (lineCount + newLines.current - 2)) {
             testInitialized.current = false;
-            let tempShownChars = [...shownChars].map((obj) => {return obj});
-            let tempApproachingChars = [...approachingChars].map((obj) => {return obj});
-            setPrevChars(tempShownChars.splice(0,lineLength))
-            setShownChars([...tempShownChars].concat([...tempApproachingChars.splice(0,lineLength)]));
-            setApproachingChars([...tempApproachingChars].concat([...typingTest.current.splice(0,lineLength)]));
-            currentCharIndex.current = 0;
+            //create a clone of testText
+            let tempTestText = Object.fromEntries(Object.keys(testText).map((key,index) => {
+                return [key, [...testText[key]].map((obj) => {return obj})]   
+            }));
+            delete tempTestText[(curLine.current-3).toString()];
+            delete tempTestText[(curLine.current-2).toString()];
+            tempTestText[(lineCount+newLines.current).toString()] = typingTest.current.splice(0,lineLength);
+            tempTestText[(lineCount+newLines.current+1).toString()] = typingTest.current.splice(0,lineLength);
+            curLine.current++;
+            newLines.current+=2;
+            curIndex.current = 0;
+            setTestText(tempTestText);
+        } else if (curIndex.current === lineLength-1) {
+            testInitialized.current = false;
+            curLine.current++;
+            curIndex.current = 0;
         } else {
-            currentCharIndex.current++;
-        }   
+            curIndex.current++;
+        }
     }
 
-    if (timeRemaining === 0) {
-        endTimer();
+    if (isCompleted === true) {
+        // dispatch iscompleted and isstarted to false
         return (<Navigate to="/results" state={{completedEntries:completedEntries, type:'special', duration: testDuration}} />);
     }
-
     return (
-       <Container>
-            <VStack spacing="30px">
-                <Text fontSize="8xl" fontWeight="bold">{timeRemaining}</Text>
-                <SpecialCharTestView curChars={shownChars} prevChars={prevChars} approachingChars={approachingChars} />
-                <SpecialCharTestInput handleKeyPress={handleKeyPress} handleKeyDown={handleKeyDown} />
-            </VStack>
-       </Container>
+       <Box>
+            <Grid templateColumns="repeat(12, 1f)">
+                <GridItem colSpan="1" w="100%" minHeight="100%" borderRight="1px" borderColor="#0B1121" minWidth={{base:"140px",lg:"250px"}}>
+                   <TestNavbar testDuration={testDuration} />
+                </GridItem>
+                <GridItem colStart="2" colEnd="13" minHeight="100vh" display="flex" justifyContent="flex-start">
+                    <Box>
+                        <VStack>
+                            <SpecialCharTestView testText={testText} curLine={curLine.current} curIndex={curIndex.current} />
+                            <SpecialCharTestInput handleKeyPress={handleKeyPress} handleKeyDown={handleKeyDown} />
+                        </VStack>
+                    </Box>
+                </GridItem>
+            </Grid>
+       </Box>
     );
 }
 
