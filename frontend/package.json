@@ -28,7 +28,6 @@
     "@emotion/styled": "^11.10.5",
     "@reduxjs/toolkit": "^1.9.3",
     "framer-motion": "^9.0.2",
-    "highlight.js": "^11.7.0",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.8.1",
     "universal-cookie": "^4.0.4"
