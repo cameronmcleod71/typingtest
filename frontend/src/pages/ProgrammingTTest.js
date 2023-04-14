@@ -72,8 +72,6 @@ export default function ProgrammingTTest() {
 
     useMemo(() => {
         if (testInitialized.current) {
-
-            // this might change to just 
             completedEntries.current.push({...testText[curLine.current.toString()][curIndex.current]});
             updateTestState();
         }

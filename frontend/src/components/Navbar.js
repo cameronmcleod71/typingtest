@@ -31,8 +31,8 @@ export default function Navbar() {
                                 </Link>
                             </MenuList>
                         </Menu>
-                        <Link>
-                            <Button color="#abb2bf" bg='#2B3A55'>Leaderboard </Button>
+                        <Link to="/leaderboard">
+                            <Button color="#abb2bf" bg='#2B3A55'> Leaderboard </Button>
                         </Link>
                     </GridItem>
                     <GridItem colSpan="1" m="10px" marginY="20px">

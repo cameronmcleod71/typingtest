@@ -9,6 +9,7 @@ import PastResults from './pages/PastResults'
 import Profile from './pages/Profile'
 import ProgrammingTTest from './pages/ProgrammingTTest'
 import PrivateRoutes from './components/routes/PrivateRoutes'
+import Leaderboard from './pages/Leaderboard'
 
 
 const router = createBrowserRouter(
@@ -16,6 +17,7 @@ const router = createBrowserRouter(
         <Route path='/' element={<RootLayout />}>
             <Route index element={<SpecialCharTest />} />
             <Route path="/programmer" element={<ProgrammingTTest />} />
+            <Route path="/leaderboard" element={<Leaderboard /> } />
             <Route path="/results" element={ <ResultsPage />} />
             <Route path='/login' element={ <Login />} />
             <Route path='/register' element={ <Register />} />

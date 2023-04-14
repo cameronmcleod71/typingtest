@@ -46,7 +46,6 @@ export default function SpecialCharTest() {
     // The total duration time of a typing test in seconds
     const testDuration = 60;  // *** this will change when we allow the user to choose a time
 
-   
     useEffect(() => {
             fetch('/api/typingtest')
             .then((response) => 
@@ -67,7 +66,6 @@ export default function SpecialCharTest() {
         },
         []
     );
-
 
     useMemo(() => {
         if (testInitialized.current) {
