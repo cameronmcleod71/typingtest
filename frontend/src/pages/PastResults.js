@@ -1,6 +1,6 @@
 import { Box, Container, Heading, Text } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
-import { getPastResults } from '../utils/typingtest'
+import { getPastResults } from '../utils/typingtestresults'
 
 export default function PastResults() {
     const [ results, setResults ] = useState([]);

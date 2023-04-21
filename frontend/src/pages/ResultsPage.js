@@ -3,7 +3,7 @@ import { Heading, Container, Text } from '@chakra-ui/react'
 import { useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { calculateStats } from '../utils/results'
-import { saveResults } from '../utils/typingtest'
+import { saveResults } from '../utils/typingtestresults'
 import { testReset } from '../redux/testStatus'
 
 

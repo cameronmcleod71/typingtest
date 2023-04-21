@@ -1,10 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { Grid, GridItem, Box, Text, Divider } from '@chakra-ui/react'
-import { useSelector, useDispatch } from "react-redux"
-import { testCompleted } from '../redux/testStatus'
+import React, { useState, useRef, useEffect } from 'react';
+import { Grid, GridItem, Box, Text, Divider } from '@chakra-ui/react';
+import { useSelector, useDispatch } from "react-redux";
+import { testCompleted } from '../redux/testStatus';
+import { getTypingTestDuration } from '../utils/typingtest';
 
 export default function TestNavbar(props) {
-    const [timeRemaining, setTimeRemaining] = useState(props.testDuration);
+    const [timeRemaining, setTimeRemaining] = useState(getTypingTestDuration());
     const isStarted = useSelector((state) => state.testStatus.isStarted);
     const dispatch = useDispatch();
     let intervalId = useRef(0);

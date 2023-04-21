@@ -11,7 +11,6 @@ export default function ProgrammingTTestView(props) {
         'user-Select': 'none',
         '-webkit-user-select': 'none',
     };
-    console.log("orogin:,",props.testText)
     return (
         <Box fontFamily="Iosevka" sx={noCopyCSS} p="15px">
             <Box>
@@ -26,7 +25,6 @@ export default function ProgrammingTTestView(props) {
 }
 
 function TyperTextContainer(props) {
-    console.log("Container");
     return (
         <Box paddingY="10px">
             <HStack>
@@ -40,7 +38,6 @@ function TyperTextContainer(props) {
 }
 
 function TyperText(props) {
-    console.log(props.lineChars);
 
     return (
         <Box required="true">
@@ -95,7 +92,6 @@ function TyperText(props) {
 
 function HighlightLine(props) {
 
-    console.log("HighlightLine");
     function codeArrayToString(array) {
         return (array.map((obj,index) => (obj.space ? " ".repeat(parseInt(obj.space)) : obj.expected)).join(""));
     }
@@ -142,7 +138,6 @@ function HighlightLine(props) {
                                     let curCharObj = props.lineChars[lineIndex];
                                     if (lineIndex<props.lineChars.length-1) lineIndex+=1;
 
-                                    console.log("curToken: ", (curTokenChar === "\n" ? "newline" : curTokenChar), "curCharObj", curCharObj);
 
                                     if (curTokenChar === " ") {
                                         if (curCharObj.given === "") { //we havnt reached this yet so just print all spaces
@@ -158,7 +153,6 @@ function HighlightLine(props) {
                                             
                                         }
                                     } else if (curCharObj.given === "") { // proceed as if we havnet reached it yet
-                                        console.log("here:", (curTokenChar === "\n" ? "newline" : curTokenChar));
                                         return ( <span>{curTokenChar === "\n" ? "" : curTokenChar}</span>);
                                     } else {
                                         if (curTokenChar === "\n") { //print all extra chars that are not newline as wrong

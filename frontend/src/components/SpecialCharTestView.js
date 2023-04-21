@@ -7,6 +7,7 @@ export default function SpecialCharTestView(props) {
         'user-Select': 'none',
         '-webkit-user-select': 'none',
     };
+    console.log("here", props.testText);
     return (
         <Box fontFamily="Iosevka" sx={noCopyCSS} p="15px">
             { 
