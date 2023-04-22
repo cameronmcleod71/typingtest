@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react'
 import { Container, Heading, Text, VStack, Grid, GridItem, Box, Divider, Spacer, HStack } from '@chakra-ui/react'
-import SpecialCharTestView from '../components/SpecialCharTestView'
+import SpecialCharTestView from './SpecialCharTestView'
 import SpecialCharTestInput from '../components/SpecialCharTestInput'
 import TestNavbar from '../components/TestNavbar'
 import { Navigate } from 'react-router-dom'

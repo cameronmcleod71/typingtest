@@ -50,7 +50,6 @@ class GetProgrammingTTest(APIView):
 
     def get(self, requests, format=None):
         new_test = example_programming_typing_test()
-        print(new_test)
         return Response(new_test, status=status.HTTP_200_OK)
         
     

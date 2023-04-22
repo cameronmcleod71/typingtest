@@ -40,15 +40,13 @@ function TyperText(props) {
                 {
                 props.lineChars.length === 0 ? <pre style={{"font-family":"Iosevka"}}>                   </pre> :
                     props.lineChars.map((obj,index) => {
-                        
-                        if (obj.value === "x"){
-                            return (<span style={{color:'#F9F871'}}>{obj.word + " "}</span>);
-                        } else if (obj.value === "o") {
-                            return (<span style={{color:'#238A84'}}>{obj.word + " "}</span>);
-                        } else {
-                            return ( <span style={{'color':'#A5ABBD'}}><span style={ ( props.curLine && index === props.curIndex ) ? {'color':'#1F2430', 'text-decoration': 'underline 4px1', "text-underline-position1": "under", "text-underline-offset1": "4px","border-radius":"6px","background":'#A5ABBD',"text-align":"center"} : {'color':'#A5ABBD'}}>{obj.word}</span>{" "}</span>);
+                        if (obj.given === "") {
+                            return ( <span style={{'color':'#A5ABBD'}}><span style={ ( props.curLine && index === props.curIndex ) ? {'color':'#1F2430', 'text-decoration': 'underline 4px1', "text-underline-position1": "under", "text-underline-offset1": "4px","border-radius":"6px","background":'#A5ABBD',"text-align":"center"} : {'color':'#A5ABBD'}}>{obj.expected}</span>{" "}</span>);
+                        } else if (obj.expected !== obj.given) {
+                            return (<span style={{color:'#F9F871'}}>{obj.expected + " "}</span>);
+                        } else if (obj.expected === obj.given) {
+                            return (<span style={{color:'#238A84'}}>{obj.expected + " "}</span>);
                         };
-
                     })
                 }
             </Text>

@@ -7,9 +7,9 @@ async function initiate(initFunc,requestTestTextFunc,setState) {
     try {
         let typingTest = getTypingTest();
         const testText = await requestTestTextFunc();
-        console.log("test text",testText);
         putAwayTestText(typingTest,testText);
         initFunc(typingTest);
+        console.log(typingTest.testState);
         setState(getTestStateClone(typingTest));
     } catch (err) {
         console.log(err);
@@ -18,7 +18,6 @@ async function initiate(initFunc,requestTestTextFunc,setState) {
 
 function update(updateFunc,setState,newValue, e) {
     let typingTest = getTypingTest();
-    console.log("Current line: ",typingTest.currentLine);
     updateFunc(typingTest, newValue, e);
     setState(getTestStateClone(typingTest));
 }
@@ -60,7 +59,7 @@ export default function TypingTest({children, type, initFunc, updateFunc, reques
                 {Children.map( children, (child) => {
                     if(!isValidElement(child)) return null;
 
-                    return cloneElement(child, { ...child.props, handleKeyPress: handleKeyPress, handleKeyDown: ()=>(console.log()), testText: currentText, curLine: 3, curIndex: 3});
+                    return cloneElement(child, { ...child.props, handleKeyPress: handleKeyPress, handleKeyDown: ()=>(console.log()), testText: currentText, currentLine: 3, currentIndex: 3});
                 })}
             </VStack>
         </Box>

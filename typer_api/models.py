@@ -35,14 +35,19 @@ class ProgrammerTypingTest(models.Model):
 class PythonScript(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     script = models.JSONField(models.JSONField())
+    length = models.IntegerField(default=1)
 
 class JavascriptScript(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     script = models.JSONField(models.JSONField())
+    length = models.IntegerField(default=1)
 
 class JavaScript(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     script = models.JSONField(models.JSONField())
+    length = models.IntegerField(default=1)
+
+
 
 
 
