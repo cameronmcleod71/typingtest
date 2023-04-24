@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 
-class SpecialCharTest(models.Model):
+class SpecialCTest(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='special_char_test')
     timestamp = models.DateTimeField(auto_now_add=True)
     test = models.JSONField(models.JSONField())
@@ -32,20 +32,21 @@ class ProgrammerTypingTest(models.Model):
     duration = models.IntegerField(default=0)
 
 
-class PythonScript(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-    script = models.JSONField(models.JSONField())
-    length = models.IntegerField(default=1)
+class ProgrammerTestScript(models.Model):
+    PYTHON = 'python'
+    JAVASCRIPT = 'javascript'
+    JAVA = 'java'
+    CHOICES = [
+        (PYTHON, 'Python'),
+        (JAVASCRIPT, 'JavaScript'),
+        (JAVA, 'Java'),
+    ]
 
-class JavascriptScript(models.Model):
     created = models.DateTimeField(auto_now_add=True)
-    script = models.JSONField(models.JSONField())
-    length = models.IntegerField(default=1)
+    script = models.JSONField()
+    language = models.CharField(max_length=50, choices=CHOICES)
+    length = models.IntegerField(default=1) #number of lines
 
-class JavaScript(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-    script = models.JSONField(models.JSONField())
-    length = models.IntegerField(default=1)
 
 
 

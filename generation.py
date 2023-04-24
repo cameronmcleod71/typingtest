@@ -3,9 +3,10 @@ import random
 import os
 import django
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "typingtest.settings")
+# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "typingtest.settings")
+django.setup()
 
-from models import ProgrammerTestScript
+from typer_api.models import ProgrammerTestScript
 
 alphabet = string.ascii_lowercase + string.digits
 
@@ -73,7 +74,9 @@ def manually_add_test():
         print("You chose to reference an existing file in the code examples dir: ")
         file_name = input("Type the name of that file here: ")
 
-        file_path = os.path.join(os.path.abspath("codeexamples"), languages[language_code], file_name)
+        file_path = os.path.join(os.path.abspath("typer_api/codeexamples"), languages[language_code], file_name)
+
+        print("Searching the file path: ", file_path)
 
         try:
             with open(file_path, "r") as f:
@@ -151,7 +154,7 @@ def manually_add_to_codeexamples():
 
     unique_filename = str(generate_UUID()) +".txt"
 
-    file_path = os.path.join(os.path.abspath("codeexamples"), languages[language_code], unique_filename)
+    file_path = os.path.join(os.path.abspath("typer_api/codeexamples"), languages[language_code], unique_filename)
 
     print("Saving the file with the unique file name " + unique_filename, "at the path: \n" + file_path)
 

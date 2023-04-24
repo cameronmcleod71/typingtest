@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .utils import SpecialTypingTest
-from .utils import example_programming_typing_test
+from .utils import example_programming_typing_test, format_script
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from rest_framework.views import APIView
 from rest_framework import permissions
@@ -13,7 +13,9 @@ from django.contrib import auth
 from django.utils.decorators import method_decorator
 import json
 from .serializers import SpecialCharTestSerializer
-from .models import SpecialCharTest
+from .models import SpecialCTest, ProgrammerTestScript
+from timeit import default_timer as timer
+import random
 
 class CheckAuthenticatedView(APIView):
     def get(self, request, format=None):
@@ -37,7 +39,7 @@ def index(requests):
     return HttpResponse("Hello from the api")
 
 
-class GetSpecialCharTest(APIView):
+class NewSpecialCTestScript(APIView):
     permission_classes = (permissions.AllowAny, )
 
     def get(self, requests, format=None):
@@ -45,12 +47,17 @@ class GetSpecialCharTest(APIView):
         new_test.generate_test()
         return Response(new_test.get_test(), status=status.HTTP_200_OK)
 
-class GetProgrammingTTest(APIView):
+class NewProgrammerTestScript(APIView):
     permission_classes = (permissions.AllowAny, )
 
     def get(self, requests, format=None):
-        new_test = example_programming_typing_test()
-        return Response(new_test, status=status.HTTP_200_OK)
+        #TODO would be faster if we stored different language types in different models
+        script = ProgrammerTestScript.objects.filter(language="python").order_by("?")[0].script
+
+        formatted_script = format_script(script) # formats to the testState format
+
+        # new_test = example_programming_typing_test()
+        return Response(formatted_script, status=status.HTTP_200_OK)
         
     
 

@@ -66,6 +66,30 @@ def example_programming_typing_test():
         parsed_chars.append(row)
     return(parsed_chars)
 
-
-
-        
+def format_script(script):
+    parsed_chars = []
+    for line in script:
+        row = []
+        skip_space = False 
+        for c in range(0,len(line)):
+            char_object = {}
+            if line[c] == " ":
+                if not skip_space:
+                    space_counter = 1
+                    next_char_index = c + 1
+                    while (next_char_index < len(line)) and (line[next_char_index] == " "):
+                        space_counter+=1
+                        next_char_index+=1
+                    char_object['space'] = str(space_counter)
+                    char_object['given'] = ""
+                    skip_space = True
+            else:
+                skip_space = False
+                char_object["expected"] = line[c]
+                char_object["given"] = ""
+            if len(char_object) != 0:
+                row.append(char_object)
+        # if len(row) == 0:
+        #     row.append({'space': '1'})
+        parsed_chars.append(row)
+    return(parsed_chars)
