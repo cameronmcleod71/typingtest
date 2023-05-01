@@ -4,4 +4,6 @@ from django.contrib import admin
 
 from .models import ProgrammerTestScript
 
-admin.site.register(ProgrammerTestScript)
+@admin.register(ProgrammerTestScript)
+class ProgrammerTestScriptAdmin(admin.ModelAdmin):
+    pass

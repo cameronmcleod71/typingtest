@@ -10,6 +10,7 @@ import Profile from './pages/Profile'
 import PrivateRoutes from './components/routes/PrivateRoutes'
 import Leaderboard from './pages/Leaderboard'
 import ProgrammingTypingTestContainer from './pages/ProgrammingTypingTestContainer'
+import TestLayout from './pages/testLayout'
 
 
 const router = createBrowserRouter(
@@ -25,6 +26,7 @@ const router = createBrowserRouter(
                 <Route path='/pastresults' element={ <PastResults />} />
                 <Route path='/myaccount' element={ <Profile />} />
             </Route>
+            <Route path="/test" element={<TestLayout />} />
         </Route>
     )
 )

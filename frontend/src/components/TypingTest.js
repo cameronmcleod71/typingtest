@@ -59,7 +59,7 @@ export default function TypingTest({children, type, initFunc, updateFunc, reques
                 {Children.map( children, (child) => {
                     if(!isValidElement(child)) return null;
 
-                    return cloneElement(child, { ...child.props, handleKeyPress: handleKeyPress, handleKeyDown: ()=>(console.log()), testText: currentText, currentLine: 3, currentIndex: 3});
+                    return cloneElement(child, { ...child.props, handleKeyPress: handleKeyPress, handleKeyDown: ()=>(console.log()), testText: currentText, currentLine: getTypingTest().currentLine, currentIndex: getTypingTest().currentIndex});
                 })}
             </VStack>
         </Box>
