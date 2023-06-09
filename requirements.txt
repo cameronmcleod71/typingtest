@@ -19,9 +19,6 @@ idna==3.4
 importlib-metadata==4.8.2
 Markdown==3.4.1
 multidict==6.0.4
-numpy==1.20.3
-openai==0.27.2
-pandas==1.2.4
 Pillow==9.4.0
 platformdirs==2.4.0
 psycopg2==2.9.5
