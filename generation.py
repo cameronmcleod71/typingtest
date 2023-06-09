@@ -30,7 +30,7 @@ def manually_add_test():
         "JS": "javascript",
         "J": "java",
     }
-    action_codes = ["C", "N"]
+    action_codes = ["C", "N", "J"]
 
     line_break()
     print("Time to add a new test to the DB")
@@ -48,7 +48,7 @@ def manually_add_test():
 
     action = ""
     while action not in action_codes:
-        print("C = Copy a typing test, N = Reference a existing file")
+        print("C = Copy a typing test, N = Reference a existing file, J = Copy a typing test json object.")
         line_break()
         action = input("Type the action code here: ")
         line_break()
@@ -84,6 +84,22 @@ def manually_add_test():
         except EnvironmentError:
             print("Something went wrong opening the filename", file_name)
             return
+    
+    # if action == "J":
+    #     print("You chose to copy a typing test in JSON form.")
+    #     print("Enter/Paste your content. Type Enter, then Ctrl-D to save it.")
+
+    #     while True:
+    #         try:
+    #             line = input()
+    #         except EOFError:
+    #             break
+    #         contents.append(line)
+    #     line_break()
+
+
+
+
         
     print(contents)
     line_break()
@@ -94,18 +110,21 @@ def manually_add_test():
         
 
 
-    print("Removing the file from codeexamples")
-    try:
-        os.remove(file_path)
-    except Exception:
-        print("something went wrong deleting the file")
-        return
+    # print("Removing the file from codeexamples")
+    # try:
+    #     os.remove(file_path)
+    # except Exception:
+    #     print("something went wrong deleting the file")
+    #     return
 
     print("Adding it to the db")
     new_db_entry = ProgrammerTestScript(script=contents,
                                          language=languages[language_code],
                                          length=len(contents))
     new_db_entry.save()
+
+    """TODO: make it so python will compare the first 4 lines of code with every test in the DB to make sure we dont app copies -
+      we can strip the lines of newlines and spaces before we compare"""
 
 
 
@@ -128,7 +147,7 @@ def manually_add_to_codeexamples():
     }
 
     line_break()
-    print("Copy text into a new codeexamples file")
+    print("This script will copy text into a new codeexamples file")
     line_break()
     print("What language are you adding to?")
 
@@ -163,6 +182,14 @@ def manually_add_to_codeexamples():
     
     print("File created")
 
+# ***************************************************************************************************************
+# Script to turn parsed typing tests in the database into regular text
+
+def print_out_typing_test_array():
+    print("Go into the cose and paste the test where the empty array is")
+    typing_test = ["def fibonacci(n):\n", "    \"\"\"Generate the Fibonacci sequence up to n terms.\"\"\"\n", "    a, b = 0, 1\n", "    for i in range(n):\n", "        yield a\n", "        a, b = b, a + b\n", "\n", "if __name__ == \"__main__\":\n", "    n = int(input(\"Enter the number of terms in the sequence: \"))\n", "    for term in fibonacci(n):\n", "        print(term)"]
+    for line in typing_test:
+        print(line.strip("\n"))
 
 
 # ***************************************************************************************************************
@@ -180,6 +207,9 @@ while command_code != "1":
         manually_add_test()
     if command_code == "3":
         manually_add_to_codeexamples()
+
+    if command_code == "4":
+        print_out_typing_test_array()
 
 
 

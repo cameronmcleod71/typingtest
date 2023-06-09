@@ -19,7 +19,7 @@ from django.urls import include, path
 app_name = "typingtest"
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin', admin.site.urls),
     path('api/', include("typer_api.urls")),
     path('', include("frontend.urls")),
     

@@ -8,14 +8,14 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 
-class SpecialCTest(models.Model):
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='special_char_test')
-    timestamp = models.DateTimeField(auto_now_add=True)
-    test = models.JSONField(models.JSONField())
-    results = models.JSONField()
-    duration = models.IntegerField(default=0) # stored in seconds
+# class SpecialCTest(models.Model):
+#     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='special_char_test')
+#     timestamp = models.DateTimeField(auto_now_add=True)
+#     test = models.JSONField(models.JSONField())
+#     results = models.JSONField()
+#     duration = models.IntegerField(default=0) # stored in seconds
 
-class ProgrammerTypingTest(models.Model):
+class CompletedTypingTest(models.Model):
     PYTHON = 'python'
     JAVASCRIPT = 'javascript'
     JAVA = 'java'
@@ -24,13 +24,19 @@ class ProgrammerTypingTest(models.Model):
         (JAVASCRIPT, 'JavaScript'),
         (JAVA, 'Java'),
     ]
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='programming_test')
-    language = models.CharField(max_length=50, choices=CHOICES)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    PROGRAMMER = 'programmer'
+    SPECIALC = 'specialc'
+    TYPE = [
+        (PROGRAMMER, 'Programmer'),
+        (SPECIALC, 'SpecialC'),
+    ]
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='completed_typing_test')
+    language = models.CharField(max_length=50, choices=CHOICES, blank=True)
+    test_type = models.CharField(max_length=50, choices=TYPE)
+    time_taken = models.JSONField()
     test = models.JSONField(models.JSONField())
     results = models.JSONField()
     duration = models.IntegerField(default=0)
-
 
 class ProgrammerTestScript(models.Model):
     PYTHON = 'python'

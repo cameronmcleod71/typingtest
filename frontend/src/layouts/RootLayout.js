@@ -1,4 +1,4 @@
-import { Box, Divider } from '@chakra-ui/react';
+import { Box, Divider, Container } from '@chakra-ui/react';
 import React, { useEffect } from 'react'
 import { Outlet } from "react-router-dom"
 import Navbar from '../components/Navbar'
@@ -12,10 +12,11 @@ export default function RootLayout() {
 
     return (
 
-        <Box bg="#1F2430" fontFamily="Iosevka">
-            <Navbar />
-            <Divider borderColor="#1F2430"/>
-            <Outlet />
+        <Box bg="customBackground" fontFamily="Iosevka" boxSizing="border-box">
+            <Container boxSizing="border-box" maxWidth="4xl">
+                <Navbar />
+                <Outlet />
+            </Container>
         </Box>
 
     )

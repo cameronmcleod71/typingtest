@@ -1,37 +1,41 @@
 
 
-export function calculateStats(testResults, type) {
+export function calculateStats(testResults, type, duration) {
     let results = {
         'wpm': 0,
         'cpm': 0,
         'accuracy': 0
-    }
-    if (type == 'special') results.cpm = calculateCPM(testResults);
-    results.accuracy = calculateAccuracy(testResults);
+    };
+    const [totalCorrect, totalCompleted] = countAnswers(testResults);
+    results.cpm = calculateCPM(totalCorrect, duration);
+    results.wpm = calculateWPM(totalCorrect, duration);
+    results.accuracy = calculateAccuracy(totalCorrect, totalCompleted);
     return results;
 }
 
-
-// Returns the Chars per minute
-// Takes an array of objects corresponding to the test
-function calculateCPM(testResults) {
-    return countAnswers(testResults,true);
+function calculateCPM(totalCorrect, duration) {
+    return Math.round((totalCorrect / duration) * 60);
 }
 
 // Counts the correct or false answers within a given array of results
 // Takes testResults, an array of objects containing the results of a taken test
 // isCorrect is a boolean value which is true if you want to count correct answers or 'o', and false if you want to count wrong answers or 'x'
-function countAnswers(testResults, isCorrect) {
-    return testResults.reduce((totalCorrect, obj) => (
-        obj.value === (isCorrect ? 'o' : 'x') ? totalCorrect + 1 : totalCorrect), 0);
+function countAnswers(testResults) {
+    const [correctChars, completedChars] = testResults.reduce(([totalCorrect, totalCompleted],currentObj) => {
+        if (currentObj.given === "" || currentObj.space || currentObj.expected === "\n") return ([totalCorrect, totalCompleted]); //currently not counting space or enter as a char
+        if (currentObj.given === currentObj.expected) return ([totalCorrect+1, totalCompleted+1]);
+        return ([totalCorrect, totalCompleted+1]);
+    }, [0,0]);
+
+    return([correctChars,completedChars]);
+    
 }
 
-function calculateWPM() {
+function calculateWPM(totalCorrect, duration) {
+    return Math.round(((totalCorrect/5) / duration) * 60);
 }
 
-// given an array of previous test results (objects), calculate the test accuracy
-// correct answers / all answers * 100
-function calculateAccuracy(testResults) {
-    return Math.round((countAnswers(testResults, true) / (countAnswers(testResults, true) + countAnswers(testResults, false))) * 100);
+function calculateAccuracy(totalCorrect, totalCompleted) {
+    return Math.round((totalCorrect / totalCompleted) * 100);
 }
 

@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 export async function getAuth() {
     const dispatch = useDispatch();
 
-
     fetch('api/auth', {
         method: "GET",
         headers: {
@@ -17,9 +16,9 @@ export async function getAuth() {
     .then((response) =>
         response.json())
     .then((data) => {
-        console.log(data);
+        // console.log(data);
         // if data is succes, set isauth to true else false
-        if (data.isAuthenticated && data.isAuthenticated === 'success') {
+        if (data.isAuthenticated && data.isAuthenticated === 'success' && data.username !== null) {
             dispatch(changeAuth(true));
             dispatch(setUsername(data.username));
         }
@@ -29,10 +28,12 @@ export async function getAuth() {
     );
 }
 
-export function register(username, password) {
+export async function register(username, password) {
     const cookies = new Cookies();
 
-    fetch('/api/register', {
+    let authResponse = {};
+
+    await fetch('/api/register', {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
@@ -45,11 +46,14 @@ export function register(username, password) {
     .then((response) =>
         response.json())
     .then((data) => {
-        console.log(data);
+        // console.log(data);
+        authResponse = data
     })
     .catch((err) => {
         console.log(err);
+        authResponse = err;
     });
+    return authResponse;
 }
 
 // this function is async so that we can wait for the auth status, and change it if necissary once the login is finished
@@ -68,7 +72,7 @@ export async function login(username, password) {
     .then((response) =>
         response.json())
     .then((data) => {
-        console.log(data);
+        // console.log(data);
         if (data.success) wasAuthSuccessful = true;
     })
     .catch((err) => {
@@ -90,7 +94,7 @@ export function signOut() {
     .then((response) => {
         response.json()})
     .then((data) => {
-        console.log(data);
+        // console.log(data);
         window.location.reload();
     })
     .catch((err) =>
@@ -111,7 +115,7 @@ export function deleteAccount() {
     .then((response) => 
         response.json())
     .then((data) => {
-        console.log(data);
+        // console.log(data);
         //need to send user to '/'
         
     })

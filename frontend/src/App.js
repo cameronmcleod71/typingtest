@@ -11,22 +11,22 @@ import PrivateRoutes from './components/routes/PrivateRoutes'
 import Leaderboard from './pages/Leaderboard'
 import ProgrammingTypingTestContainer from './pages/ProgrammingTypingTestContainer'
 import TestLayout from './pages/testLayout'
+import TypingTestContainer from './pages/TypingTestContainer'
 
 
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route path='/' element={<RootLayout />}>
-            <Route index element={<SpecialCTypingTestContainer />} />
-            <Route path="/programmer" element={<ProgrammingTypingTestContainer />} />
+            <Route index element={<TypingTestContainer />} />
             <Route path="/leaderboard" element={<Leaderboard /> } />
             <Route path="/results" element={ <ResultsPage />} />
             <Route path='/login' element={ <Login />} />
             <Route path='/register' element={ <Register />} />
+            <Route path="/test" element={ <TestLayout />} />
             <Route element={ <PrivateRoutes /> }>
                 <Route path='/pastresults' element={ <PastResults />} />
                 <Route path='/myaccount' element={ <Profile />} />
             </Route>
-            <Route path="/test" element={<TestLayout />} />
         </Route>
     )
 )

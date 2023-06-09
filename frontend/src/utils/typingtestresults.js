@@ -2,8 +2,9 @@ import Cookies from 'universal-cookie'
 
 export function saveResults(testPackage) {
     const cookies = new Cookies();
+    console.log(testPackage);
     try {
-        fetch('api/savespecialchar', {
+        fetch('api/savecompletedtypingtest', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -28,7 +29,7 @@ export function saveResults(testPackage) {
 
 export function getPastResults() {
     try {
-        return (fetch('api/getspecialchartest', {
+        return (fetch('api/getcompletedtypingtest', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

@@ -12,8 +12,8 @@ from django.contrib.auth.models import User
 from django.contrib import auth
 from django.utils.decorators import method_decorator
 import json
-from .serializers import SpecialCharTestSerializer
-from .models import SpecialCTest, ProgrammerTestScript
+from .serializers import CompletedTypingTestSerializer
+from .models import CompletedTypingTest, ProgrammerTestScript
 from timeit import default_timer as timer
 import random
 
@@ -47,12 +47,16 @@ class NewSpecialCTestScript(APIView):
         new_test.generate_test()
         return Response(new_test.get_test(), status=status.HTTP_200_OK)
 
+@method_decorator(csrf_protect, name='dispatch')
 class NewProgrammerTestScript(APIView):
     permission_classes = (permissions.AllowAny, )
 
-    def get(self, requests, format=None):
+    def post(self, request, format=None):
+        data = self.request.data
+        test_lang = data['language']
+
         #TODO would be faster if we stored different language types in different models
-        script = ProgrammerTestScript.objects.filter(language="python").order_by("?")[0].script
+        script = ProgrammerTestScript.objects.filter(language=test_lang).order_by("?")[0].script
 
         formatted_script = format_script(script) # formats to the testState format
 
@@ -138,7 +142,7 @@ class DeleteAccountView(APIView):
             return Response({ 'error': 'Something went wrong when trying to delete user' })
 
 @method_decorator(csrf_protect, name='dispatch')
-class SaveSpecialCharTest(APIView):
+class SaveCompletedTypingTest(APIView):
     def post(self, request, format=None):
         data = self.request.data
         user = self.request.user
@@ -150,20 +154,20 @@ class SaveSpecialCharTest(APIView):
             a = json.dumps(a)
         data['test'] = json.dumps(data['test'])
 
-        serializer = SpecialCharTestSerializer(data=data)
+        serializer = CompletedTypingTestSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response({'success': 'Test saved'})
         print(serializer.errors)
         return Response({'error': 'Test not valid'})
     
-class GetPastSpecialCharTest(APIView):
+class GetCompletedTypingTest(APIView):
     def get(self,request, format=None):
         try:
 
             user = self.request.user
-            tests = SpecialCharTest.objects.filter(owner=user.id)
-            serializer = SpecialCharTestSerializer(tests, many=True) # may be a bug because there may not always be many
+            tests = CompletedTypingTest.objects.filter(owner=user.id)
+            serializer = CompletedTypingTestSerializer(tests, many=True) # may be a bug because there may not always be many
             # print(json.dumps(tests))
             return Response({'success': serializer.data})
         except:

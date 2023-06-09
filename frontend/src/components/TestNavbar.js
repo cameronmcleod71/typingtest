@@ -5,15 +5,15 @@ import { testCompleted } from '../redux/testStatus';
 import { getTypingTestDuration } from '../utils/typingtest';
 
 export default function TestNavbar(props) {
-    const [timeRemaining, setTimeRemaining] = useState(getTypingTestDuration());
+    const [timeRemaining, setTimeRemaining] = useState(60);
     const isStarted = useSelector((state) => state.testStatus.isStarted);
     const dispatch = useDispatch();
     let intervalId = useRef(0);
-    let testInitialized = useRef(false);
+    let timerInitialized = useRef(false);
     let timerEnded = useRef(false);
 
-    if (isStarted && (testInitialized.current === false)) {
-        testInitialized.current = true;
+    if (isStarted && (timerInitialized.current === false)) {
+        timerInitialized.current = true;
         startTimer();
     }
 
