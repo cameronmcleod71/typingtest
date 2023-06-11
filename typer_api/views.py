@@ -47,13 +47,12 @@ class NewSpecialCTestScript(APIView):
         new_test.generate_test()
         return Response(new_test.get_test(), status=status.HTTP_200_OK)
 
-@method_decorator(csrf_protect, name='dispatch')
+
 class NewProgrammerTestScript(APIView):
     permission_classes = (permissions.AllowAny, )
 
-    def post(self, request, format=None):
-        data = self.request.data
-        test_lang = data['language']
+    def get(self, request, format=None):
+        test_lang = self.request.GET.get('language')
 
         #TODO would be faster if we stored different language types in different models
         script = ProgrammerTestScript.objects.filter(language=test_lang).order_by("?")[0].script
