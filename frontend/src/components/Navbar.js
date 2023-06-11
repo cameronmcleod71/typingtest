@@ -25,6 +25,7 @@ import ResultsPage from "../pages/ResultsPage";
 import PastResults from "../pages/PastResults";
 import { signOut } from "../utils/auth";
 import Crate from "./Crate";
+// import '@fontsource/oxanium';
 
 export default function Navbar() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -82,10 +83,13 @@ export default function Navbar() {
                 <Heading
                   as="h1"
                   textAlign="center"
-                  color="#abb2bf"
-                  fontSize={{ base: "2xl", md: "3xl" }}
+                  color="settingsText"
+                  // color="#FEB2B2"
+                  style={{"font-family": "Iosevka"}}
+                  fontSize={{ base: "sm",sm: "xl", md: "2xl", lg: "3xl" }}
+                  whiteSpace="nowrap"
                 >
-                  typer.io
+                  {"<dev typer io/>"}
                 </Heading>
               </Link>
             </Box>
