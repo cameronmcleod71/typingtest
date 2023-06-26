@@ -31,8 +31,8 @@ export default function TypingTestContainer() {
     localStorage.setItem("settings", JSON.stringify(settings));
   }, [settings]);
   return (
-    <Box width="auto">
-      <Box minWidth="auto" width="auto">
+    <Box width="auto" height="100%">
+      <Box minWidth="auto" width="auto" height="100%">
         <SettingsContext.Provider value={{ settings, setSettings, choices }}>
           <Flex
             // width="auto"
@@ -75,6 +75,7 @@ export default function TypingTestContainer() {
             // justifyContent={(settings[0] === "programmer" ? "flex-" + (flipText === false ? "start" : "end") : "center")}
             paddingX="30px"
             overflow="hidden"
+            height="100%"
           >
             <FlipTextContext.Provider value={{ flipText, setFlipText }}>
               {settings[0] === "programmer" ? (
