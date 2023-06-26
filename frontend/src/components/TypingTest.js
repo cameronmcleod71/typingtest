@@ -134,8 +134,8 @@ export default function TypingTest({
     <>
       {Object.keys(currentText).length === 0 ? (
         <Box width="100%" display="flex" justifyContent="center" height="30vh" alignItems="center">
-            <Spinner size="xl" color="customForeground"
-              thickness='6px'
+            <Spinner size="xl" color="#FEB2B2"
+              thickness='4px'
               speed='0.65s'
             />
         </ Box>
