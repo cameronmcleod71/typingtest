@@ -8,11 +8,12 @@ import {v4} from "uuid";
 const lineNumberStyles = {
     fontSize: {base: "sm", lg: "lg"},
     color: "white",
-    paddingRight: "30px",
+    marginRight: "30px",
 };
 
 const typingTextStyles = {
     fontSize: {base: "sm", sm: "sm", sm: "md",  lg: "lg", xl: "xl"},
+    paddingLeft: "35px",
 };
 
 const testStateReduce = (acc, obj) => {
@@ -30,7 +31,7 @@ export default function TyperTextContainer(props) {
         <Box paddingY="10px" flexWrap="wrap">
             <HStack>
                 <Text sx={lineNumberStyles} filter={ props.lineNum === props.currentLine.toString() ? "opacity(1)" : "opacity(0.6)" }>{props.lineNum}</Text>
-                <Box sx={typingTextStyles}>
+                <Box sx={typingTextStyles} position="absolute">
                     <MotionCursor isInFocus={props.isInFocus} currentIndex={props.currentIndex} numOfChars={props.testTextLine.reduce(testStateReduce, 0)} isCurrentLine={props.lineNum === props.currentLine.toString()} numOfSpaces={ props.testTextLine[0].space ? props.testTextLine[0].space : 0 } lineNum={props.lineNum}>
                         {Children.map( props.parentChildren, (child) => {
                             if(!isValidElement(child)) return null;

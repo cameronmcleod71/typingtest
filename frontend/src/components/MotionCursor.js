@@ -1,8 +1,8 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import { motion, isValidMotionProp, useAnimation } from "framer-motion";
-import { chakra, shouldForwardProp } from "@chakra-ui/react";
+import { chakra, shouldForwardProp, Box } from "@chakra-ui/react";
 
-const ChakraBox = chakra(motion.div, {
+const Cursor = chakra(motion.div, {
   /**
    * Allow motion props and non-Chakra props to be forwarded.
    */
@@ -10,63 +10,78 @@ const ChakraBox = chakra(motion.div, {
 });
 
 export default function MotionCursor({isInFocus, currentIndex, numOfChars, isCurrentLine, numOfSpaces, lineNum, children, ...props }) {
-  // const variants = {
-  //   start: {
-  //     "&::before": {
-  //       transform: "translateX(0px)",
-  //     },
-  //   },
-  //   end: {
-  //     "&::before": {
-  //       transform: "translateX(100px)",
-  //     },
-  //   },
-  // };
+  const [position, setPosition] = useState([0, 0]);
+  const [charWidth, setCharWidth] = useState(0);
+  const ref = useRef();
+  const firstCall = useRef(true);
+  const prevPosition = useRef(0);
+  const prevNumOfChars = useRef(0);
+  
+
+  function setCharLength() {
+    const textWidth = ref.current.clientWidth;
+    const tempCharWidth = textWidth / numOfChars;
+    setCharWidth(tempCharWidth);
+  }
+
+
+  useEffect(() => {
+    if (isCurrentLine) {
+      if(firstCall.current){
+        firstCall.current = false;
+      } else {
+        if(prevNumOfChars.current > numOfChars || prevPosition.current > currentIndex) {
+          setPosition(prev => [prev[1], prev[1] - charWidth]);
+        } else {
+          setPosition(prev => [prev[1], prev[1] + charWidth]);
+        }
+      }
+      prevPosition.current = currentIndex;
+      prevNumOfChars.current = numOfChars;
+    }
+  },[currentIndex, numOfChars]);
+
+  useEffect(() => {
+    setCharLength();
+    prevPosition.current = currentIndex;
+    prevNumOfChars.current = numOfChars;
+  }, [lineNum, charWidth]);
+
+  useEffect(() => {
+    setPosition([parseInt(numOfSpaces)*charWidth, parseInt(numOfSpaces)*charWidth]);
+  }, [charWidth]);
+
   const variants = {
     start: {
-      "--before-x": "translateX(0)"
+      x: position[0]
     },
     end: {
-      "--before-x": "translateX(100)"
+      x: position[1]
     },
   };
 
-  const move = useAnimation();
-  useEffect(() => {
-    move.start("end");
-  }, [move]);
-
   return (
-    <ChakraBox
-      height="max-content" 
-      width="max-content"
-      variants={variants}
-      initial="start"
-      animate="move"
-      transition={{ duration: 1}}
-      sx={{
-        position: "relative",
-        width: "max-content",
-        height: "max-content",
-        display: "flex",
-        "flex-wrap": "wrap",
-        // "background-color": "red",
-        "&::before": {
-          content: '""',
-          "border-left": "2px solid",
-          "border-color": "grey",
-          "white-space": "nowrap",
-          overflow: "hidden",
-          position: "absolute",
-          top: "0",
-          // right: "0",
-          bottom: "0",
-          // left: "0"
-        },
-      }}
-      {...props}
-    >
-      {children}
-    </ChakraBox>
+    <Box height="max-content" width="max-content" position="relative">
+      <Cursor
+        height="100%"
+        width="100%"
+        variants={variants}
+        initial="start"
+        animate="end"
+        transition={{ duration: 0.11}}
+        position="absolute"
+        borderLeft="2px"
+        // borderColor="gray"
+        borderColor={isCurrentLine ? "gray" : "transparent"}
+        // sx={{
+        //   "border-left": "2px solid",
+        //   "border-color": "grey",
+        // }}
+        {...props}
+      />
+      <Box ref={ref}>
+        {children}
+      </Box>
+    </Box>
   );
 }
