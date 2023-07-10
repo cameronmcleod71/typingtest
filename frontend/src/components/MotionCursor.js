@@ -32,14 +32,15 @@ export default function MotionCursor({isInFocus, currentIndex, numOfChars, isCur
       } else {
         if(prevNumOfChars.current > numOfChars || prevPosition.current > currentIndex) {
           setPosition(prev => [prev[1], prev[1] - charWidth]);
-        } else {
+        } else if (!(prevPosition.current+1 == numOfChars)) {
+          console.log(prevPosition.current, numOfChars);
           setPosition(prev => [prev[1], prev[1] + charWidth]);
         }
       }
       prevPosition.current = currentIndex;
       prevNumOfChars.current = numOfChars;
     }
-  },[currentIndex, numOfChars]);
+  },[currentIndex, numOfChars, isCurrentLine]);
 
   useEffect(() => {
     setCharLength();
