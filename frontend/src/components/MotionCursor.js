@@ -16,6 +16,7 @@ export default function MotionCursor({isInFocus, currentIndex, numOfChars, isCur
   const firstCall = useRef(true);
   const prevPosition = useRef(0);
   const prevNumOfChars = useRef(0);
+  const controls = useAnimation();
   
 
   function setCharLength() {
@@ -51,12 +52,19 @@ export default function MotionCursor({isInFocus, currentIndex, numOfChars, isCur
     setPosition([parseInt(numOfSpaces)*charWidth, parseInt(numOfSpaces)*charWidth]);
   }, [charWidth]);
 
+  useEffect(() => {
+    controls.set({opacity: 1});
+    controls.start("end");
+  }, [position]);
+
   const variants = {
     start: {
-      x: position[0]
+      x: position[0],
     },
     end: {
-      x: position[1]
+      x: position[1],
+      opacity: 0,
+      transition: { duration: 0.11, opacity: { delay: 1.5, duration: 0.75, repeat: Infinity, ease: "backIn" } }, 
     },
   };
 
@@ -65,18 +73,13 @@ export default function MotionCursor({isInFocus, currentIndex, numOfChars, isCur
       <Cursor
         height="100%"
         width="100%"
+        opacity={1}
         variants={variants}
         initial="start"
-        animate="end"
-        transition={{ duration: 0.11}}
+        animate={controls}
         position="absolute"
         borderLeft="2px"
-        // borderColor="gray"
         borderColor={isCurrentLine ? "gray" : "transparent"}
-        // sx={{
-        //   "border-left": "2px solid",
-        //   "border-color": "grey",
-        // }}
         {...props}
       />
       <Box ref={ref}>
