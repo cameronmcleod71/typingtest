@@ -30,10 +30,9 @@ export default function MotionCursor({isInFocus, currentIndex, numOfChars, isCur
       if(firstCall.current){
         firstCall.current = false;
       } else {
-        if(prevNumOfChars.current > numOfChars || prevPosition.current > currentIndex) {
+        if (prevNumOfChars.current > numOfChars || prevPosition.current > currentIndex) {
           setPosition(prev => [prev[1], prev[1] - charWidth]);
-        } else if (!(prevPosition.current+1 == numOfChars)) {
-          console.log(prevPosition.current, numOfChars);
+        } else {
           setPosition(prev => [prev[1], prev[1] + charWidth]);
         }
       }
