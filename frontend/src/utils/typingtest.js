@@ -176,7 +176,7 @@ function addKeyPressToState(typingTest, newValue) {
     if (getCurrentPosition(typingTest).given) {
         typingTest.testState[typingTest.currentLine][typingTest.currentIndex].given += newValue;
     } else {
-        typingTest.testState[typingTest.currentLine][typingTest.currentIndex].given = newValue;
+        typingTest.testState[typingTest.currentLine][typingTest.currentIndex].given = (getCurrentPosition(typingTest).expected === "\n" ? "" : newValue);
     }
     //return ({...typingTest, testState});
 }

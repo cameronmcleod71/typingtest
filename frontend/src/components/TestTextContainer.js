@@ -16,7 +16,7 @@ export default function TestTextContainer(props) {
     },[]);
 
     return (
-        <Box fontFamily="Iosevka" sx={noCopyCSS} p="15px">
+        <Box fontFamily="Iosevka" sx={noCopyCSS} paddingY="10px">
             <Box onFocus={() => setIsFocused(true)} onBlur={() => setIsFocused(false)} id="typingTestAutoFocus" tabIndex="0" outline="none" onKeyPress={(e) => props.handleKeyPress(e)} onKeyDown={(e) => props.handleKeyDown(e)}>
             { 
                 Object.keys(props.testText).map((key) => {
