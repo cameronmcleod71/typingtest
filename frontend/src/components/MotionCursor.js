@@ -69,9 +69,9 @@ export default function MotionCursor({isInFocus, currentIndex, numOfChars, isCur
   }, [charWidth]);
 
   useEffect(() => {
-    controls.set({opacity: 1});
+    controls.set({opacity: (isInFocus ? 1 : 0)});
     controls.start("end");
-  }, [position]);
+  }, [position, isInFocus]);
 
   const variants = {
     start: {
@@ -80,7 +80,7 @@ export default function MotionCursor({isInFocus, currentIndex, numOfChars, isCur
     end: {
       x: position[1],
       opacity: 0,
-      transition: { duration: 0.11, opacity: { delay: 1.5, duration: 0.75, repeat: Infinity, ease: "backIn" } }, 
+      transition: { duration: 0.11, opacity: { delay: 1.5, duration: 1.0, repeat: Infinity, ease: "backIn" } }, 
     },
   };
 
@@ -89,7 +89,6 @@ export default function MotionCursor({isInFocus, currentIndex, numOfChars, isCur
       <Cursor
         height="100%"
         width="100%"
-        opacity={1}
         variants={variants}
         initial="start"
         animate={controls}
