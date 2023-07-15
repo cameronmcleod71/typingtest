@@ -17,6 +17,7 @@ export default function MotionCursor({isInFocus, currentIndex, numOfChars, isCur
   const prevPosition = useRef(0);
   const prevNumOfChars = useRef(0);
   const controls = useAnimation();
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   
 
   function setCharLength() {
@@ -25,6 +26,21 @@ export default function MotionCursor({isInFocus, currentIndex, numOfChars, isCur
     setCharWidth(tempCharWidth);
   }
 
+  function setWidth() {
+    setWindowWidth(window.innerWidth);
+  }
+
+  useEffect(()=> {
+    window.addEventListener('resize', setWidth);
+    return () => {
+      window.removeEventListener('resize', setWidth);
+    }
+  },[]);
+
+  useEffect(() => {
+    setCharLength();
+    if (isCurrentLine) setPosition(prev => [((numOfChars+numOfSpaces) * (ref.current.clientWidth / numOfChars)),(prevPosition.current * (ref.current.clientWidth / numOfChars))]);
+  }, [windowWidth]);
 
   useEffect(() => {
     if (isCurrentLine) {
