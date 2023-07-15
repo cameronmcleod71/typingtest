@@ -36,6 +36,7 @@ class CompletedTypingTest(models.Model):
     time_taken = models.JSONField()
     test = models.JSONField(models.JSONField())
     results = models.JSONField()
+    wpm = models.IntegerField(default=0)
     duration = models.IntegerField(default=0)
 
 class ProgrammerTestScript(models.Model):
