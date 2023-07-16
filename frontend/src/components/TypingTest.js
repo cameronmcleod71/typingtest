@@ -6,12 +6,18 @@ import { Navigate } from "react-router-dom";
 import { FlipTextContext, } from "../context/Context";
 import { testReset } from '../redux/testStatus';
 
-
+let leaderboardData = {};
 
 async function initiate(initFunc,requestTestTextFunc,setState, language) {
     try {
         let typingTest = getTypingTest();
-        const testText = await requestTestTextFunc(language);
+        let testText = [];
+        if (language === null) {
+            testText = await requestTestTextFunc(language);
+        } else {
+            [testText, leaderboardData] = await requestTestTextFunc(language);
+        }
+        
         putAwayTestText(typingTest,testText);
         initFunc();
         setState(getTestStateClone());
@@ -92,7 +98,7 @@ export default function TypingTest({children, type, language, initFunc, updateFu
     if (isCompleted === true || endOfTypingText()) {
         // dispatch iscompleted and isstarted to false
         const results = exportFinishedResults();
-        return (<Navigate to="/results" state={{completedEntries: results[0], type: type, duration: results[1], language: language}} />);
+        return (<Navigate to="/results" state={{completedEntries: results[0], type: type, duration: results[1], language: language, leaderboardData: leaderboardData}} />);
     }
 
     return (

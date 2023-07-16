@@ -1,0 +1,72 @@
+{
+    "scores": [
+        {
+            "name": "catcat",
+            "score": 0,
+            "time_taken": {
+                "day": "4",
+                "hour": "12",
+                "year": "2023",
+                "month": "5",
+                "minute": "11"
+            }
+        },
+        {
+            "name": "catcat",
+            "score": 0,
+            "time_taken": {
+                "day": "4",
+                "hour": "12",
+                "year": "2023",
+                "month": "5",
+                "minute": "12"
+            }
+        },
+        {
+            "name": "catcat",
+            "score": 0,
+            "time_taken": {
+                "day": "4",
+                "hour": "12",
+                "year": "2023",
+                "month": "5",
+                "minute": "13"
+            }
+        },
+        {
+            "name": "catcat",
+            "score": 0,
+            "time_taken": {
+                "day": "8",
+                "hour": "12",
+                "year": "2023",
+                "month": "5",
+                "minute": "22"
+            }
+        },
+        {
+            "name": "catcat",
+            "score": 0,
+            "time_taken": {
+                "day": "8",
+                "hour": "12",
+                "year": "2023",
+                "month": "6",
+                "minute": "28"
+            }
+        },
+        {
+            "name": "catcat",
+            "score": 0,
+            "time_taken": {
+                "day": "9",
+                "hour": "09",
+                "year": "2023",
+                "month": "6",
+                "minute": "18"
+            }
+        }
+    ],
+    "spots": 30,
+    "lowest_score": 0
+}

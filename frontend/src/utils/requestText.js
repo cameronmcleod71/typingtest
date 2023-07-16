@@ -3,29 +3,21 @@ import Cookies from 'universal-cookie'
 export async function requestProgrammingTestText(language){
     const cookies = new Cookies();
     let typingText = {};
-    // try {
-    //     const response = await fetch('/api/getprogrammingttest', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //             'X-CSRFToken': cookies.get('csrftoken'),
-    //         },
-    //         // credentials: 'same-orgin',
-    //         body: JSON.stringify({language}),
-    //     });
-    //     const data = await response.json();
-    //     typingText = data;
-    // } catch (err) {
-    //     console.log(err);
-    // }
+    let leaderboardData = {};
+
     try {
         const response = await fetch(`/api/getprogrammingttest?language=${language}`);
         const data = await response.json();
-        typingText = data;
+        typingText = data["script"];
+        leaderboardData = {
+            "lowest": data["lowest"],
+            "isFull": data["isFull"]
+        };
     } catch (err) {
         console.log(err);
     }
-    return typingText
+    console.log(leaderboardData);
+    return [typingText, leaderboardData]
 }
 
 export async function requestSpecialCTestText(language){

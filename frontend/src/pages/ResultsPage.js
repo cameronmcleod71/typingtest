@@ -29,6 +29,7 @@ export default function ResultsPage() {
   const testType = state.type;
   const testDuration = state.duration;
   const testLang = state.language;
+  const leaderboardData = state.leaderboardData;
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const toast = useToast();
   const d = new Date();
@@ -43,10 +44,14 @@ export default function ResultsPage() {
     test: testResults,
     duration: testDuration,
     results: calculatedResults,
+    wpm: calculatedResults["wpm"],
     test_type: testType,
     language: (testLang === null ? "" : testLang),
     time_taken: {"year":d.getFullYear().toString(),"month":(d.getMonth()+1).toString(), "day":d.getDate().toString().toString(), "hour":addZero(d.getHours()).toString(), "minute":addZero(d.getMinutes()).toString()}
   };
+
+  //compare wpm to leaderboard data => if there is a spot for them, and they havnt logged in, try to get them to log in or create an account => once they do send completed test to server
+  
   if (isAuthenticated) {
     saveResults(testPackage);
   }

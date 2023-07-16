@@ -16,6 +16,10 @@ from .serializers import CompletedTypingTestSerializer
 from .models import CompletedTypingTest, ProgrammerTestScript
 from timeit import default_timer as timer
 import random
+from pathlib import Path
+import os
+
+APP_DIR = Path(__file__).resolve().parent
 
 class CheckAuthenticatedView(APIView):
     def get(self, request, format=None):
@@ -56,11 +60,20 @@ class NewProgrammerTestScript(APIView):
 
         #TODO would be faster if we stored different language types in different models
         script = ProgrammerTestScript.objects.filter(language=test_lang).order_by("?")[0].script
+        formatted_script = format_script(script)
 
-        formatted_script = format_script(script) # formats to the testState format
+        script_dict = {
+            "script": formatted_script,
+            "lowest": 0,
+            "isFull": True,
+        }
 
-        # new_test = example_programming_typing_test()
-        return Response(formatted_script, status=status.HTTP_200_OK)
+        with open(os.path.join(APP_DIR,"leaderboard.json")) as leaderboard_json:
+            data = json.load(leaderboard_json)
+            script_dict["lowest"] = data["lowest_score"]
+            script_dict["isFull"] = len(data["scores"]) < data["spots"]
+
+        return Response(script_dict, status=status.HTTP_200_OK)
         
     
 
@@ -152,6 +165,29 @@ class SaveCompletedTypingTest(APIView):
         for a in data['test']:
             a = json.dumps(a)
         data['test'] = json.dumps(data['test'])
+
+        new_highscore = False
+
+        with open(os.path.join(APP_DIR,"leaderboard.json"),"r+") as leaderboard_json:
+            jsondata = json.load(leaderboard_json)
+            if (len(jsondata["scores"]) < jsondata["spots"]) or (jsondata["lowest_score"] < data['wpm']):
+                print("new highscore")
+                new_highscore = True
+                inserted = False
+                for score_index in range(len(jsondata["scores"])):
+                    if inserted:
+                        break
+                    if jsondata["scores"][score_index]["wpm"] < data["wpm"]:
+                        jsondata["scores"].insert(score_index, {})
+                        inserted = True
+                while len(jsondata["scores"] > jsondata["spots"]): # remote any extra
+                    jsondata["scores"].pop()
+
+                jsondata["lowest_score"] = jsondata["scores"][jsondata["spots"]-1]["wpm"] # reset the lowest score
+
+                updated_leaderboard = json.dumps(jsondata, indent=4)
+                leaderboard_json.write(updated_leaderboard)
+
 
         serializer = CompletedTypingTestSerializer(data=data)
         if serializer.is_valid():
