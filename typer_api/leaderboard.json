@@ -1,6 +1,17 @@
 {
     "scores": [
         {
+            "name": "cameronmcleod71",
+            "score": 36,
+            "time_taken": {
+                "year": "2023",
+                "month": "7",
+                "day": "16",
+                "hour": "12",
+                "minute": "54"
+            }
+        },
+        {
             "name": "catcat",
             "score": 0,
             "time_taken": {
@@ -64,6 +75,39 @@
                 "year": "2023",
                 "month": "6",
                 "minute": "18"
+            }
+        },
+        {
+            "name": "cameronmcleod71",
+            "score": 0,
+            "time_taken": {
+                "day": "16",
+                "hour": "12",
+                "year": "2023",
+                "month": "7",
+                "minute": "30"
+            }
+        },
+        {
+            "name": "cameronmcleod71",
+            "score": 0,
+            "time_taken": {
+                "day": "16",
+                "hour": "12",
+                "year": "2023",
+                "month": "7",
+                "minute": "31"
+            }
+        },
+        {
+            "name": "cameronmcleod71",
+            "score": 0,
+            "time_taken": {
+                "day": "16",
+                "hour": "12",
+                "year": "2023",
+                "month": "7",
+                "minute": "35"
             }
         }
     ],

@@ -17,4 +17,4 @@ class CompletedTypingTestSerializer(serializers.ModelSerializer):
     class Meta:
         model = CompletedTypingTest
         read_only_fields = ['id']
-        fields = ['test','results','duration','owner','time_taken','id','test_type', 'language']
+        fields = ['test','results','duration','owner','time_taken','id','test_type','wpm', 'language']

@@ -160,15 +160,17 @@ class SaveCompletedTypingTest(APIView):
         user = self.request.user
 
         data['owner'] = user.id # might not be a good practice to edit the request itself
-        print(data)
+
         data['results'] = json.dumps(data['results'])
         for a in data['test']:
             a = json.dumps(a)
         data['test'] = json.dumps(data['test'])
 
+        print(data["wpm"])
+
         new_highscore = False
 
-        with open(os.path.join(APP_DIR,"leaderboard.json"),"r+") as leaderboard_json:
+        with open(os.path.join(APP_DIR,"leaderboard.json"),"r") as leaderboard_json:
             jsondata = json.load(leaderboard_json)
             if (len(jsondata["scores"]) < jsondata["spots"]) or (jsondata["lowest_score"] < data['wpm']):
                 print("new highscore")
@@ -177,16 +179,17 @@ class SaveCompletedTypingTest(APIView):
                 for score_index in range(len(jsondata["scores"])):
                     if inserted:
                         break
-                    if jsondata["scores"][score_index]["wpm"] < data["wpm"]:
-                        jsondata["scores"].insert(score_index, {})
+                    if jsondata["scores"][score_index]["score"] < data["wpm"]:
+                        jsondata["scores"].insert(score_index, {"name": user.username,"score": data["wpm"], "time_taken": data["time_taken"]})
                         inserted = True
-                while len(jsondata["scores"] > jsondata["spots"]): # remote any extra
+                while len(jsondata["scores"]) > jsondata["spots"]: # remote any extra
                     jsondata["scores"].pop()
 
-                jsondata["lowest_score"] = jsondata["scores"][jsondata["spots"]-1]["wpm"] # reset the lowest score
+                jsondata["lowest_score"] = jsondata["scores"][-1]["score"] # reset the lowest score
 
                 updated_leaderboard = json.dumps(jsondata, indent=4)
-                leaderboard_json.write(updated_leaderboard)
+                with open(os.path.join(APP_DIR,"leaderboard.json"), "w") as outfile:
+                    outfile.write(updated_leaderboard)
 
 
         serializer = CompletedTypingTestSerializer(data=data)
