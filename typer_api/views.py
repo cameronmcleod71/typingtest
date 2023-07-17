@@ -210,6 +210,16 @@ class GetCompletedTypingTest(APIView):
             return Response({'success': serializer.data})
         except:
             return Response({'error': 'Something went wrong completing your request'})
+        
+class GetLeaderboard(APIView):
+    def get(self, request, format=None):
+        try:
+            with open(os.path.join(APP_DIR, "leaderboard.json"), "r") as leaderboard_json:
+                leaderboard_data = json.load(leaderboard_json)
+                leaderboard_scores = leaderboard_data["scores"]
+                return Response({'success': leaderboard_scores})
+        except:
+            return Response({"error": "Something went wrong completing your request"})
 
 
 

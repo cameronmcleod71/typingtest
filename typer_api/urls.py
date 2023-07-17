@@ -13,4 +13,5 @@ urlpatterns = [
     path('getcompletedtypingtest', views.GetCompletedTypingTest.as_view()),
     path('deleteaccount', views.DeleteAccountView.as_view()),
     path('getprogrammingttest', views.NewProgrammerTestScript.as_view()),
+    path("leaderboard", views.GetLeaderboard.as_view()),
 ]

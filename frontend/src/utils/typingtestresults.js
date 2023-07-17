@@ -54,5 +54,30 @@ export function getPastResults() {
 
 }
 
+export function getLeaderboard() {
+    try {
+        return (fetch('api/leaderboard', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then((response) =>
+            response.json())
+        .then((data) => {
+            if (data.success) {
+                return (data.success);
+            } else {
+                return [];
+            }
+        })
+        .catch((err) =>
+            console.log(err)
+        ));
+    } catch {
+
+    }
+}
+
 
 
